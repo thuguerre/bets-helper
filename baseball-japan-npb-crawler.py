@@ -2,11 +2,12 @@ import requests
 import re
 import sys
 from datetime import date
+import logging
 
 URL_Farm_Leagues = "https://npb.jp/bis/eng/<YEAR>/calendar/index_farm_<MONTH>.html"
 URL_Regular_Season = "https://npb.jp/bis/eng/<YEAR>/calendar/index_<MONTH>.html"
 
-def retrieve_results(year_to_get, month_to_get, league_to_get):
+def retrieve_month_results(year_to_get, month_to_get, league_to_get):
 
     if len(month_to_get) == 1:
         month_to_get = "0" + month_to_get
@@ -19,7 +20,7 @@ def retrieve_results(year_to_get, month_to_get, league_to_get):
         url = URL_Regular_Season.replace('<YEAR>', year_to_get).replace('<MONTH>', month_to_get)
         day_regex = re.compile('<a href="/bis/eng/2020/games/s([0-9]{8})')
 
-    print(url)
+    logging.debug(url)
     wholepage = requests.get(url)
 
     allmatches_regex = re.compile('<a href="[a-zA-Z0-9\.\/]*">[A-Z] [0-9*]{1,3} - [0-9*]{1,2} [A-Z]')
@@ -32,6 +33,30 @@ def retrieve_results(year_to_get, month_to_get, league_to_get):
         result = matchresult_regex.search(onematch).group(1)
 
         print(day[0:4] + "-" + day[4:6] + "-" + day[6:9] + "\t\t" + league_to_get + "\t\t\t " + result)
+
+def retrieve_results(start_year, start_month, start_day, to_year, to_month, to_day, league_to_get):
+
+    logging.info("retrieve result from:" + start_year + "-" + start_month + "-" + start_day + " to " + to_year + "-" + to_month + "-" + to_day)
+
+    current_year = int(start_year)
+    current_month = int(start_month)
+
+    increment_month = True
+    while increment_month:
+        
+        retrieve_month_results(str(current_year), str(current_month), league_to_get)
+
+        if current_year < int(to_year):
+            current_month += 1
+            if current_month == 13:
+                current_year += 1
+                current_month = 1
+        elif current_year == int(to_year) and current_month < int(to_month):
+            current_month += 1
+        elif current_year == int(to_year) and current_month == int(to_month):
+            increment_month = False
+        else:
+            raise "Should not be in this case"
 
 #
 # Documentation Printing Method
@@ -46,6 +71,8 @@ def printDocumentation():
 #
 if __name__ == '__main__':
     
+    logging.getLogger().setLevel(logging.WARN)
+
     today = date.today()
 
     start_year = today.strftime("%Y")
@@ -72,25 +99,6 @@ if __name__ == '__main__':
             printDocumentation()
             sys.exit()
 
-    print("retrieve result from:" + start_year + "-" + start_month + "-" + start_day + " to " + to_year + "-" + to_month + "-" + to_day)
-
-    current_year = int(start_year)
-    current_month = int(start_month)
-
-    increment_month = True
-    while increment_month:
-        
-        retrieve_results(str(current_year), str(current_month), 'Regular Season')
-
-        if current_year < int(to_year):
-            current_month += 1
-            if current_month == 13:
-                current_year += 1
-                current_month = 1
-        elif current_year == int(to_year) and current_month < int(to_month):
-            current_month += 1
-        elif current_year == int(to_year) and current_month == int(to_month):
-            increment_month = False
-        else:
-            raise "Should not be in this case"
+    retrieve_results(start_year, start_month, start_day, to_year, to_month, to_day, 'Regular Season')
+    
 

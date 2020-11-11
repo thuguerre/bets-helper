@@ -86,8 +86,8 @@ def retrieve_results(start_year, start_month, start_day, to_year, to_month, to_d
 #
 def printDocumentation():
 
-    print("args 'from:YYYYMMDD'. If not set, from current year and month.")
-    print("args 'to:YYYYMMDD'. If not set, current year, month and day.")
+    print("args 'from:YYYYMMDD'. If not set, default value is today.")
+    print("args 'to:YYYYMMDD'. If not set, default value is today.")
     print("args 'yesterday': set FROM and TO date limits at yesterday's date.")
 
 #

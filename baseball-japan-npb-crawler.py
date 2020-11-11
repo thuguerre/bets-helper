@@ -1,7 +1,7 @@
 import requests
 import re
 import sys
-from datetime import date
+from datetime import date, timedelta
 import logging
 
 URL_Farm_Leagues = "https://npb.jp/bis/eng/<YEAR>/calendar/index_farm_<MONTH>.html"
@@ -88,6 +88,7 @@ def printDocumentation():
 
     print("args 'from:YYYYMMDD'. If not set, from current year and month.")
     print("args 'to:YYYYMMDD'. If not set, current year, month and day.")
+    print("args 'yesterday': set FROM and TO date limits at yesterday's date.")
 
 #
 # Main Function
@@ -117,6 +118,17 @@ if __name__ == '__main__':
             to_year = args[3:7]
             to_month = args[7:9]
             to_day = args[9:11]
+
+        elif args == "yesterday":
+            yesterday = date.today() - timedelta(days=1)
+
+            start_year = yesterday.strftime("%Y")
+            start_month = yesterday.strftime("%m")
+            start_day = yesterday.strftime("%d")
+
+            to_year = yesterday.strftime("%Y")
+            to_month = yesterday.strftime("%m")
+            to_day = yesterday.strftime("%d")
 
         elif args == '-h' or args == "-help" or args == "--h" or args == "--help":
             printDocumentation()

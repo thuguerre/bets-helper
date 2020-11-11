@@ -50,7 +50,7 @@ def retrieve_month_results(year_to_get, month_to_get, league_to_get, from_day, t
 
 def retrieve_results(start_year, start_month, start_day, to_year, to_month, to_day, league_to_get):
 
-    logging.info("retrieve result from:" + start_year + "-" + start_month + "-" + start_day + " to " + to_year + "-" + to_month + "-" + to_day)
+    logging.info("retrieve results from:" + start_year + "-" + start_month + "-" + start_day + " to " + to_year + "-" + to_month + "-" + to_day)
 
     current_year = int(start_year)
     current_month = int(start_month)
@@ -94,7 +94,7 @@ def printDocumentation():
 #
 if __name__ == '__main__':
     
-    logging.getLogger().setLevel(logging.INFO)
+    logging.getLogger().setLevel(logging.WARN)
 
     today = date.today()
 
@@ -121,6 +121,19 @@ if __name__ == '__main__':
         elif args == '-h' or args == "-help" or args == "--h" or args == "--help":
             printDocumentation()
             sys.exit()
+
+    if int(start_year) > int(to_year):
+        logging.error("retrieve results from:" + start_year + "-" + start_month + "-" + start_day + " to " + to_year + "-" + to_month + "-" + to_day)
+        logging.error("FROM year cannnot be greater than TO year")
+        sys.exit()
+    elif int(start_year) == int(to_year) and int(start_month) > int(to_month):
+        logging.error("retrieve results from:" + start_year + "-" + start_month + "-" + start_day + " to " + to_year + "-" + to_month + "-" + to_day)
+        logging.error("FROM month cannnot be greater than TO month")
+        sys.exit()
+    elif int(start_year) == int(to_year) and int(start_month) == int(to_month) and int(start_day) > int(to_day):
+        logging.error("retrieve results from:" + start_year + "-" + start_month + "-" + start_day + " to " + to_year + "-" + to_month + "-" + to_day)
+        logging.error("FROM day cannnot be greater than TO day")
+        sys.exit()
 
     retrieve_results(start_year, start_month, start_day, to_year, to_month, to_day, 'Regular Season')
     

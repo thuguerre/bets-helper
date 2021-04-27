@@ -27,8 +27,8 @@ def retrieve_month_results(year_to_get, month_to_get, league_to_get, from_day, t
     logging.debug(url)
     wholepage = requests.get(url)
 
-    allmatches_regex = re.compile('<a href="[a-zA-Z0-9\.\/]*">[A-Z] [0-9*]{1,3} - [0-9*]{1,2} [A-Z]')
-    matchresult_regex = re.compile('([A-Z] [0-9*]{1,3} - [0-9*]{1,2} [A-Z])')
+    allmatches_regex = re.compile('<a href="[a-zA-Z0-9\.\/]*">[A-Z]{1,2} [0-9*]{1,3} - [0-9*]{1,2} [A-Z]{1,2}')
+    matchresult_regex = re.compile('([A-Z]{1,2} [0-9*]{1,3} - [0-9*]{1,2} [A-Z]{1,2})')
 
     allmatches = allmatches_regex.findall(wholepage.text)
 

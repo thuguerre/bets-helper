@@ -18,11 +18,11 @@ def retrieve_month_results(year_to_get, month_to_get, league_to_get, from_day, t
 
     if league_to_get == 'Farm Leagues':
         url = URL_Farm_Leagues.replace('<YEAR>', year_to_get).replace('<MONTH>', month_to_get)
-        day_regex = re.compile('<a href="/bis/eng/2020/games/fs([0-9]{8})')
+        day_regex = re.compile('<a href="/bis/eng/'+year_to_get+'/games/fs([0-9]{8})')
 
     elif league_to_get == 'Regular Season': 
         url = URL_Regular_Season.replace('<YEAR>', year_to_get).replace('<MONTH>', month_to_get)
-        day_regex = re.compile('<a href="/bis/eng/2020/games/s([0-9]{8})')
+        day_regex = re.compile('<a href="/bis/eng/'+year_to_get+'/games/s([0-9]{8})')
 
     logging.debug(url)
     wholepage = requests.get(url)

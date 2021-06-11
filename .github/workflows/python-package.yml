@@ -6,11 +6,11 @@ name: Python package
 on:
   push:
     paths:
-    - '.github/**'
+    - '**'
 
   pull_request:
     paths:
-    - '.github/**'
+    - '**'
 
 jobs:
   build:

@@ -142,7 +142,7 @@ def upload_results(results):
         "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
         "client_x509_cert_url": os.getenv("SA_CLIENT_X509_CERT_URL")
     }
-    print("coucou:" + os.getenv('SA_PROJECT_ID'))
+    print("coucou:" + os.getenv('TEST'))
     creds = gspread.service_account_from_dict(credentials)
     client = gspread.authorize(creds)
 

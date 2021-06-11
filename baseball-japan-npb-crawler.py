@@ -2,6 +2,8 @@ import requests
 import re
 import sys
 import os
+import ssl
+from urllib3 import poolmanager
 from datetime import date, timedelta
 import logging
 import gspread
@@ -17,6 +19,19 @@ SPREADSHEET_INDEX = 6               # index of 'Baseball Japan RAW', starting fr
 def next_available_row(worksheet):
     str_list = list(filter(None, worksheet.col_values(1)))
     return str(len(str_list)+1)
+
+class TLSAdapter(requests.adapters.HTTPAdapter):
+
+    def init_poolmanager(self, connections, maxsize, block=False):
+        """Create and initialize the urllib3 PoolManager."""
+        ctx = ssl.create_default_context()
+        ctx.set_ciphers('DEFAULT@SECLEVEL=1')
+        self.poolmanager = poolmanager.PoolManager(
+                num_pools=connections,
+                maxsize=maxsize,
+                block=block,
+                ssl_version=ssl.PROTOCOL_TLS,
+                ssl_context=ctx)
 
 def retrieve_month_results(year_to_get, month_to_get, league_to_get, from_day, to_day):
 
@@ -36,8 +51,11 @@ def retrieve_month_results(year_to_get, month_to_get, league_to_get, from_day, t
         day_regex = re.compile('<a href="/bis/eng/'+year_to_get+'/games/s([0-9]{8})')
 
     logging.debug(url)
-    wholepage = requests.get(url)
-
+    #wholepage = requests.get(url)
+    session = requests.session()
+    session.mount('https://', TLSAdapter())
+    wholepage = session.get(url)
+    
     allmatches_regex = re.compile('<a href="[a-zA-Z0-9\.\/]*">[A-Z]{1,2} [0-9*]{1,3} - [0-9*]{1,2} [A-Z]{1,2}')
     matchresult_regex = re.compile('([A-Z]{1,2} [0-9*]{1,3} - [0-9*]{1,2} [A-Z]{1,2})')
 

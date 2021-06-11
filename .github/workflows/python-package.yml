@@ -9,6 +9,7 @@ on:
     - '.github/**'
 
   pull_request:
+    paths:
     - '.github/**'
 
 jobs:

@@ -145,6 +145,8 @@ def upload_results(results):
     creds = gspread.service_account_from_dict(credentials)
     client = gspread.authorize(creds)
 
+    print("coucou:" + os.getenv('SA_PROJECT_ID'))
+    
     jpn_raw_sheet = client.open(SPREADSHEET_NAME).get_worksheet(SPREADSHEET_INDEX)
 
     for result in results:

@@ -42,5 +42,12 @@ jobs:
         flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
 
     - name: Execute
+      env:
+          SA_PROJECT_ID: ${{ secrets.SA_PROJECT_ID }}
+          SA_PRIVATE_KEY_ID: ${{ secrets.SA_PRIVATE_KEY_ID }}
+          SA_PRIVATE_KEY: ${{ secrets.SA_PRIVATE_KEY }}
+          SA_CLIENT_EMAIL: ${{ secrets.SA_CLIENT_EMAIL }}
+          SA_CLIENT_ID: ${{ secrets.SA_CLIENT_ID }}
+          SA_CLIENT_X509_CERT_URL: ${{ secrets.SA_CLIENT_X509_CERT_URL }}
       run: |
-        python baseball-japan-npb-crawler.py from:20210610 upload:no
+        python baseball-japan-npb-crawler.py from:20210610 upload:yes

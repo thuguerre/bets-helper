@@ -2,6 +2,7 @@ import requests
 import re
 import sys
 import os
+from requests import adapters
 import ssl
 from urllib3 import poolmanager
 from datetime import date, timedelta
@@ -20,7 +21,7 @@ def next_available_row(worksheet):
     str_list = list(filter(None, worksheet.col_values(1)))
     return str(len(str_list)+1)
 
-class TLSAdapter(requests.adapters.HTTPAdapter):
+class TLSAdapter(adapters.HTTPAdapter):
 
     def init_poolmanager(self, connections, maxsize, block=False):
         """Create and initialize the urllib3 PoolManager."""
@@ -55,6 +56,7 @@ def retrieve_month_results(year_to_get, month_to_get, league_to_get, from_day, t
     session = requests.session()
     session.mount('https://', TLSAdapter())
     wholepage = session.get(url)
+
     
     allmatches_regex = re.compile('<a href="[a-zA-Z0-9\.\/]*">[A-Z]{1,2} [0-9*]{1,3} - [0-9*]{1,2} [A-Z]{1,2}')
     matchresult_regex = re.compile('([A-Z]{1,2} [0-9*]{1,3} - [0-9*]{1,2} [A-Z]{1,2})')

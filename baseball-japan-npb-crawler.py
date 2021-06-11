@@ -21,6 +21,8 @@ def next_available_row(worksheet):
     str_list = list(filter(None, worksheet.col_values(1)))
     return str(len(str_list)+1)
 
+# Adapter to prevent SSL Signature error while getting NPB web site content
+# https://github.com/psf/requests/issues/4775
 class TLSAdapter(adapters.HTTPAdapter):
 
     def init_poolmanager(self, connections, maxsize, block=False):
@@ -51,12 +53,11 @@ def retrieve_month_results(year_to_get, month_to_get, league_to_get, from_day, t
         url = URL_Regular_Season.replace('<YEAR>', year_to_get).replace('<MONTH>', month_to_get)
         day_regex = re.compile('<a href="/bis/eng/'+year_to_get+'/games/s([0-9]{8})')
 
+    # getting HTML page content to then parse
     logging.debug(url)
-    #wholepage = requests.get(url)
     session = requests.session()
     session.mount('https://', TLSAdapter())
     wholepage = session.get(url)
-
     
     allmatches_regex = re.compile('<a href="[a-zA-Z0-9\.\/]*">[A-Z]{1,2} [0-9*]{1,3} - [0-9*]{1,2} [A-Z]{1,2}')
     matchresult_regex = re.compile('([A-Z]{1,2} [0-9*]{1,3} - [0-9*]{1,2} [A-Z]{1,2})')

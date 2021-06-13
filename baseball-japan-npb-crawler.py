@@ -142,8 +142,8 @@ def upload_results(results):
         "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
         "client_x509_cert_url": os.environ["SA_CLIENT_X509_CERT_URL"]
     }
-    creds = gspread.service_account_from_dict(credentials)
-    client = gspread.authorize(creds)
+    client = gspread.service_account_from_dict(credentials)
+    #client = gspread.authorize(creds)
 
     jpn_raw_sheet = client.open(SPREADSHEET_NAME).get_worksheet(SPREADSHEET_INDEX)
 

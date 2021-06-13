@@ -129,11 +129,6 @@ def upload_results(results):
     # use creds to create a client to interact with the Google Drive API
     scope = ['https://spreadsheets.google.com/feeds','https://www.googleapis.com/auth/drive']
     #creds = ServiceAccountCredentials.from_json_keyfile_name('client_secret.json', scope)
-    
-    if "BEGIN PRIVATE KEY" in os.environ["SA_PRIVATE_KEY"]:
-        print("OK CLE TROUVEE")
-    else:
-        print("CLE NON TROUVEE")
 
     credentials = {
         "type": "service_account",

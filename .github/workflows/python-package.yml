@@ -43,7 +43,6 @@ jobs:
 
     - name: Execute
       env:
-          TEST_COUCOU: ${{ secrets.TEST_COUCOU }}
           SA_PROJECT_ID: ${{ secrets.SA_PROJECT_ID }}
           SA_PRIVATE_KEY_ID: ${{ secrets.SA_PRIVATE_KEY_ID }}
           SA_PRIVATE_KEY: ${{ secrets.SA_PRIVATE_KEY }}

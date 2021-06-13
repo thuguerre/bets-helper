@@ -50,4 +50,4 @@ jobs:
           SA_CLIENT_ID: ${{ secrets.SA_CLIENT_ID }}
           SA_CLIENT_X509_CERT_URL: ${{ secrets.SA_CLIENT_X509_CERT_URL }}
       run: |
-        python baseball-japan-npb-crawler.py from:20210610 upload:yes
+        python baseball-japan-npb-crawler.py from:20210613 upload:yes

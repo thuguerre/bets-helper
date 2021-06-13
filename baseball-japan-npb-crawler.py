@@ -130,7 +130,7 @@ def upload_results(results):
     scope = ['https://spreadsheets.google.com/feeds','https://www.googleapis.com/auth/drive']
     #creds = ServiceAccountCredentials.from_json_keyfile_name('client_secret.json', scope)
     
-    if "BEGIN PRIVATE KEY" in os.environ["private_key"]:
+    if "BEGIN PRIVATE KEY" in os.environ["SA_PRIVATE_KEY"]:
         print("OK CLE TROUVEE")
     else:
         print("CLE NON TROUVEE")

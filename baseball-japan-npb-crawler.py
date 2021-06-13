@@ -130,9 +130,9 @@ def upload_results(results):
     scope = ['https://spreadsheets.google.com/feeds','https://www.googleapis.com/auth/drive']
     #creds = ServiceAccountCredentials.from_json_keyfile_name('client_secret.json', scope)
     
-    if os.environ['TEST_COUCOU'].lower() == 'coucou':
+    if os.environ["TEST_COUCOU"].lower() == "coucou":
         print("OK COUCOU")
-        
+
     credentials = {
         "type": "service_account",
         "project_id": os.environ["SA_PROJECT_ID"],

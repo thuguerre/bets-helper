@@ -127,8 +127,8 @@ def retrieve_results(start_year, start_month, start_day, to_year, to_month, to_d
 def upload_results(results):
 
     # use creds to create a client to interact with the Google Drive API
+    # example from: https://docs.gspread.org/en/latest/oauth2.html
     scope = ['https://spreadsheets.google.com/feeds','https://www.googleapis.com/auth/drive']
-    #creds = ServiceAccountCredentials.from_json_keyfile_name('client_secret.json', scope)
 
     credentials = {
         "type": "service_account",
@@ -143,8 +143,8 @@ def upload_results(results):
         "client_x509_cert_url": os.environ["SA_CLIENT_X509_CERT_URL"]
     }
     client = gspread.service_account_from_dict(credentials)
-    #client = gspread.authorize(creds)
 
+    # opening the right sheet to update
     jpn_raw_sheet = client.open(SPREADSHEET_NAME).get_worksheet(SPREADSHEET_INDEX)
 
     for result in results:
@@ -255,6 +255,7 @@ if __name__ == '__main__':
         logging.error("FROM day cannnot be greater than TO day")
         sys.exit()
 
+    print("retrieving result from: " + start_year + "/" + start_month + "/" + start_day)
     results = retrieve_results(start_year, start_month, start_day, to_year, to_month, to_day, 'Regular Season')
 
     if(upload):

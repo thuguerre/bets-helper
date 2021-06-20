@@ -2,5 +2,4 @@
 client_secret.json
 .DS_Store
 baseball-japan/.env
-baseball-japan/__pycache__/main_local_helper.cpython-38.pyc
-baseball-japan/__pycache__/SpreadSheetHelper.cpython-38.pyc
+baseball-japan/__pycache__/**

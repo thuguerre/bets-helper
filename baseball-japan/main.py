@@ -110,4 +110,4 @@ if __name__ == '__main__':
         helper = SpreadSheetHelper()
         helper.upload_results(results)
     
-    os.environ["SCRIPT_RESULT"] = "coucou"
+    os.environ["SCRIPT_RESULT"]='coucou'

@@ -42,6 +42,7 @@ jobs:
         flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
 
     - name: Execute
+      id: execute
       env:
           SA_PROJECT_ID: ${{ secrets.SA_PROJECT_ID }}
           SA_PRIVATE_KEY_ID: ${{ secrets.SA_PRIVATE_KEY_ID }}
@@ -51,12 +52,12 @@ jobs:
           SA_CLIENT_X509_CERT_URL: ${{ secrets.SA_CLIENT_X509_CERT_URL }}
       run: |
         python baseball-japan/main.py upload:no
-        echo "result= $JPN_BASEBALL_SCRIPT_RESULT"
-        echo "test coucou"
+        echo "::set-output name=JPN_BASEBALL_SCRIPT_RESULT::RESULTS_READY_NOK"
+
     
     - name: Notify results are ready
       uses: "hugoalh/GitHubAction.SendToIFTTT@v3.1.2"
-      if: ${{ $JPN_BASEBALL_SCRIPT_RESULT == 'RESULTS_READY' }}
+      if: ${{ steps.execute.outputs.JPN_BASEBALL_SCRIPT_RESULT == 'RESULTS_READY' }}
       with:
         webhook_eventname: "JPNBaseBallResultsReady"
         webhook_key: "${{secrets.IFTTT_WEBHOOK_KEY}}"

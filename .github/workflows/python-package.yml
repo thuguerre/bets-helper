@@ -26,18 +26,18 @@ jobs:
 
     steps:
     - name: Set $UPLOAD Env Var on Schedule
-        if: ${{ github.event_name == 'schedule' }}
-        run: |
-          echo "::set-env name=UPLOAD::yes"
+      if: ${{ github.event_name == 'schedule' }}
+      run: |
+        echo "::set-env name=UPLOAD::yes"
     
     - name: Set $UPLOAD Env Var on Push or Pull_Request
-        if: ${{ github.event_name == 'push' || github.event_name == 'pull_request' }}
-        run: |
-          echo "::set-env name=UPLOAD::no"
+      if: ${{ github.event_name == 'push' || github.event_name == 'pull_request' }}
+      run: |
+        echo "::set-env name=UPLOAD::no"
 
     - name: check env value
-        run: |
-          echo $UPLOAD
+      run: |
+        echo $UPLOAD
 
     - uses: actions/checkout@v2
     - name: Set up Python ${{ matrix.python-version }}

@@ -13,7 +13,7 @@ on:
     - '**'
   
   schedule:
-    - cron: 0 12 48 * *
+    - cron: 48 12 * * *
 
 jobs:
   build:

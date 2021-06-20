@@ -1,4 +1,5 @@
 import sys, logging
+from main_local_helper import LocalExecHelper
 from datetime import date, timedelta, datetime
 from NPBCrawler import NPBCrawler
 from SpreadSheetHelper import SpreadSheetHelper
@@ -12,6 +13,7 @@ def printDocumentation():
     print("args 'to:YYYYMMDD'. If not set, default value is today.")
     print("args 'yesterday': set FROM and TO date limits at yesterday's date.")
     print("args 'upload', set to yes or no, to upload to spreadsheet.")
+    print("args 'local_exec' to load required environment variables")
 
 #
 # Main Function
@@ -68,6 +70,9 @@ if __name__ == '__main__':
         elif args == '-h' or args == "-help" or args == "--h" or args == "--help":
             printDocumentation()
             sys.exit()
+
+        elif args == "local_exec":
+            LocalExecHelper()
 
     # verifying parameters are compatible
     if int(start_year) > int(to_year):

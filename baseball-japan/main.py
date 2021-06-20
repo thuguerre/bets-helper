@@ -109,5 +109,6 @@ if __name__ == '__main__':
     if(upload and len(results)>0):
         helper = SpreadSheetHelper()
         helper.upload_results(results)
-
-    print("coucou_results")
+        print("RESULTS_UPDATED")
+    else:
+        print("NO_RESULTS_UPDATED")

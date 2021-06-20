@@ -110,4 +110,4 @@ if __name__ == '__main__':
         helper = SpreadSheetHelper()
         helper.upload_results(results)
     
-    os.environ["JPN_BASEBALL_SCRIPT_RESULT"]='RESULTS_READY'
+    sys.exit(413)

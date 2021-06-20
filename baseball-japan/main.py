@@ -111,4 +111,3 @@ if __name__ == '__main__':
         helper.upload_results(results)
     
     os.environ["JPN_BASEBALL_SCRIPT_RESULT"]='RESULTS_READY'
-    print("test sequence")

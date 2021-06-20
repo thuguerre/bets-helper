@@ -53,7 +53,7 @@ jobs:
         python baseball-japan/main.py upload:no
     
     - name: Notify results are ready
-      uses: "hugoalh/GitHubAction.SendToIFTTT"
+      uses: "hugoalh/GitHubAction.SendToIFTTT@v3.1.2"
       with:
         webhook_eventname: "JPNBaseBallResultsReady"
         webhook_key: "${{secrets.IFTTT_WEBHOOK_KEY}}"

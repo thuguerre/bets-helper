@@ -15,7 +15,8 @@ on:
     paths:
     - '**'
   
-  workflow_dispatch:
+  schedule:
+    - cron: '5 * * * *'
 
 jobs:
   build:
@@ -27,8 +28,8 @@ jobs:
         python-version: [3.8]
 
     steps:
-    - name: Set $UPLOAD Env Var on Workflow_Dispatch
-      if: ${{ github.event_name == 'workflow_dispatch' }}
+    - name: Set $UPLOAD Env Var on Schedule
+      if: ${{ github.event_name == 'schedule' }}
       run: |
         echo "UPLOAD=yes" >> $GITHUB_ENV
     

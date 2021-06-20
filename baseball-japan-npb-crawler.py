@@ -5,7 +5,7 @@ import os
 from requests import adapters
 import ssl
 from urllib3 import poolmanager
-from datetime import date, timedelta
+from datetime import date, timedelta, datetime
 import logging
 import gspread
 from oauth2client.service_account import ServiceAccountCredentials
@@ -198,7 +198,7 @@ if __name__ == '__main__':
     logging.getLogger().setLevel(logging.WARN)
 
     today = date.today()
-    print("running datetime:", today)
+    print("running datetime:", datetime.now())
 
     start_year = today.strftime("%Y")
     start_month = today.strftime("%m")

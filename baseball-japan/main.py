@@ -102,17 +102,12 @@ if __name__ == '__main__':
         logging.error("FROM day cannnot be greater than TO day")
         sys.exit()
 
-    logging.info("test exit 3")
-
     # retrieving results from NPB website
     crawler = NPBCrawler()
     results = crawler.retrieve_results(start_year, start_month, start_day, to_year, to_month, to_day, 'Regular Season')
 
-    logging.info("test exit 2")
-
     if(upload and len(results)>0):
         helper = SpreadSheetHelper()
         helper.upload_results(results)
-    
-    logging.info("test exit")
-    #sys.exit(413)
+
+    sys.exit(0)

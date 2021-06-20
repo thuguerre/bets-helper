@@ -28,12 +28,12 @@ jobs:
     - name: Set $UPLOAD Env Var on Schedule
       if: ${{ github.event_name == 'schedule' }}
       run: |
-        echo "::set-env name=UPLOAD::yes"
+        echo "UPLOAD=yes" >> $GITHUB_ENV
     
     - name: Set $UPLOAD Env Var on Push or Pull_Request
       if: ${{ github.event_name == 'push' || github.event_name == 'pull_request' }}
       run: |
-        echo "::set-env name=UPLOAD::no"
+        echo "UPLOAD=no" >> $GITHUB_ENV
 
     - name: check env value
       run: |

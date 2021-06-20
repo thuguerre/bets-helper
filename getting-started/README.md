@@ -22,3 +22,5 @@ The `.env` file must have following values:
     SA_CLIENT_X509_CERT_URL=...
 
 ... where each `...` must be replaced by the right values. Please follow [the procedure](https://docs.gspread.org/en/latest/oauth2.html) from this page to initialize your own values from your own Google Project Account.
+
+As `.env` file will contain secrets, it is ignored from any committing to GitHub.

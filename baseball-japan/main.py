@@ -115,4 +115,4 @@ if __name__ == '__main__':
         helper.upload_results(results)
     
     logging.info("test exit")
-    sys.exit(413)
+    #sys.exit(413)

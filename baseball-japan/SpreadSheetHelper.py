@@ -7,8 +7,13 @@ SPREADSHEET_INDEX = 6               # index of 'Baseball Japan RAW', starting fr
 
 class SpreadSheetHelper:
 
-    def next_available_row(self, worksheet):
-        str_list = list(filter(None, worksheet.col_values(1)))
+    jpn_raw_sheet = None
+
+    def __init__(self):
+        self.jpn_raw_sheet = self.get_jpn_raw_results_sheet()
+
+    def next_available_row(self):
+        str_list = list(filter(None, self.jpn_raw_sheet.col_values(1)))
         return str(len(str_list)+1)
 
     def get_jpn_raw_results_sheet(self):
@@ -35,13 +40,10 @@ class SpreadSheetHelper:
 
     def upload_results(self, results):
 
-        # opening the right sheet to update
-        jpn_raw_sheet = self.get_jpn_raw_results_sheet()
-
         for result in results:
-            next_row = self.next_available_row(jpn_raw_sheet)
-            jpn_raw_sheet.insert_row(['temp'], int(next_row))
-            jpn_raw_sheet.update(
+            next_row = self.next_available_row()
+            self.jpn_raw_sheet.insert_row(['temp'], int(next_row))
+            self.jpn_raw_sheet.update(
                 'A' + next_row + ':U' + next_row,
                 [
                     [

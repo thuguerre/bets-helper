@@ -207,7 +207,7 @@ if __name__ == '__main__':
     to_month = today.strftime("%m")
     to_day = today.strftime("%d")
 
-    upload = True
+    upload = False
 
     for args in sys.argv:
 

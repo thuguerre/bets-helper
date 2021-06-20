@@ -1,4 +1,4 @@
-import sys, logging
+import sys, logging, os
 from main_local_helper import LocalExecHelper
 from datetime import date, timedelta, datetime
 from NPBCrawler import NPBCrawler
@@ -109,3 +109,5 @@ if __name__ == '__main__':
     if(upload):
         helper = SpreadSheetHelper()
         helper.upload_results(results)
+    
+    os.environ["SCRIPT_RESULT"] = 0

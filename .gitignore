@@ -2,4 +2,4 @@
 client_secret.json
 .DS_Store
 baseball-japan/.env
-baseball-japan/__pycache__/**
+**/*.pyc

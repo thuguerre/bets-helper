@@ -31,7 +31,7 @@ jobs:
 
     steps:
     - name: Set $UPLOAD Env Var on Schedule
-      if: ${{ github.event_name == 'schedule' }}
+      if: ${{ github.event_name == 'schedule' || github.event_name == 'workflow_dispatch' }}
       run: |
         echo "UPLOAD=yes" >> $GITHUB_ENV
     

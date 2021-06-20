@@ -39,7 +39,7 @@ class SpreadSheetHelper:
         jpn_raw_sheet = self.get_jpn_raw_results_sheet()
 
         for result in results:
-            next_row = next_available_row(jpn_raw_sheet)
+            next_row = self.next_available_row(jpn_raw_sheet)
             jpn_raw_sheet.insert_row(['temp'], int(next_row))
             jpn_raw_sheet.update(
                 'A' + next_row + ':U' + next_row,

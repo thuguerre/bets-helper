@@ -110,4 +110,4 @@ if __name__ == '__main__':
         helper = SpreadSheetHelper()
         helper.upload_results(results)
 
-    sys.exit(0)
+    print("coucou_results")

@@ -52,7 +52,7 @@ jobs:
           SA_CLIENT_X509_CERT_URL: ${{ secrets.SA_CLIENT_X509_CERT_URL }}
       run: |
         result=$(python baseball-japan/main.py upload:no)
-        echo "result= $result"
+        echo "result='$result'"
         echo "::set-output name=JPN_BASEBALL_SCRIPT_RESULT::RESULTS_READY_KO"
 
     

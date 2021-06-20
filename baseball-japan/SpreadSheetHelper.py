@@ -1,4 +1,4 @@
-import os
+import os, datetime
 import gspread
 from oauth2client.service_account import ServiceAccountCredentials
 
@@ -11,6 +11,12 @@ class SpreadSheetHelper:
 
     def __init__(self):
         self.jpn_raw_sheet = self.get_jpn_raw_results_sheet()
+
+    def get_last_result_date(self):
+        values_list = self.jpn_raw_sheet.col_values(1)
+        values_list.remove('Date')
+        values_list.sort(key=lambda x: datetime.datetime.strptime(x, '%d/%m/%Y'))
+        return values_list[-1]
 
     def next_available_row(self):
         str_list = list(filter(None, self.jpn_raw_sheet.col_values(1)))

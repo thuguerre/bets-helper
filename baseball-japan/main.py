@@ -9,11 +9,11 @@ from SpreadSheetHelper import SpreadSheetHelper
 #
 def printDocumentation():
 
-    print("args 'from:YYYYMMDD'. If not set, default value is today.")
+    print("args 'from:YYYYMMDD'. If not set, default value is today. Use 'from:complete_spreadsheet' to retrieve results using last date retrieved in remote spreadsheet.")
     print("args 'to:YYYYMMDD'. If not set, default value is today.")
     print("args 'yesterday': set FROM and TO date limits at yesterday's date.")
     print("args 'upload', set to yes or no, to upload to spreadsheet.")
-    print("args 'local_exec' to load required environment variables")
+    print("args 'local_exec' to load required environment variables. Must be first argument, to let others working.")
 
 #
 # Main Function
@@ -40,7 +40,21 @@ if __name__ == '__main__':
 
     for args in sys.argv:
 
-        if args.startswith("from:"):
+        if args == "from:complete_spreadsheet":
+            helper = SpreadSheetHelper()
+            last_result_date = helper.get_last_result_date()
+            last_result_date = datetime.strptime(last_result_date, '%d/%m/%Y')
+            last_result_date = last_result_date + timedelta(days=1)
+
+            start_year = last_result_date.strftime("%Y")
+            start_month = last_result_date.strftime("%m")
+            start_day = last_result_date.strftime("%d")
+
+            to_year = last_result_date.strftime("%Y")
+            to_month = last_result_date.strftime("%m")
+            to_day = last_result_date.strftime("%d")
+        
+        elif args.startswith("from:"):
             start_year = args[5:9]
             start_month = args[9:11]
             start_day = args[11:13]

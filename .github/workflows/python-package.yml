@@ -15,9 +15,6 @@ on:
     paths:
     - '**'
   
-  schedule:
-    - cron: '5 * * * *'
-  
   workflow_dispatch:
 
 jobs:
@@ -30,8 +27,8 @@ jobs:
         python-version: [3.8]
 
     steps:
-    - name: Set $UPLOAD Env Var on Schedule
-      if: ${{ github.event_name == 'schedule' || github.event_name == 'workflow_dispatch' }}
+    - name: Set $UPLOAD Env Var on Workflow_Dispatch
+      if: ${{ github.event_name == 'workflow_dispatch' }}
       run: |
         echo "UPLOAD=yes" >> $GITHUB_ENV
     
@@ -72,4 +69,4 @@ jobs:
           SA_CLIENT_ID: ${{ secrets.SA_CLIENT_ID }}
           SA_CLIENT_X509_CERT_URL: ${{ secrets.SA_CLIENT_X509_CERT_URL }}
       run: |
-        python baseball-japan-npb-crawler.py upload:$UPLOAD
+        python baseball-japan-npb-crawler.py upload:$UPLOAD from:20210614

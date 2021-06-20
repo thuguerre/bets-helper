@@ -106,8 +106,9 @@ if __name__ == '__main__':
     crawler = NPBCrawler()
     results = crawler.retrieve_results(start_year, start_month, start_day, to_year, to_month, to_day, 'Regular Season')
 
-    if(upload):
+    if(upload and len(results)>0):
         helper = SpreadSheetHelper()
         helper.upload_results(results)
     
-    os.environ["SCRIPT_RESULT"]='coucou'
+    os.environ["JPN_BASEBALL_SCRIPT_RESULT"]='RESULTS_READY'
+    print("test sequence")

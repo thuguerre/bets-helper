@@ -51,11 +51,12 @@ jobs:
           SA_CLIENT_X509_CERT_URL: ${{ secrets.SA_CLIENT_X509_CERT_URL }}
       run: |
         python baseball-japan/main.py upload:no
-        echo "result= $SCRIPT_RESULT"
+        echo "result= $JPN_BASEBALL_SCRIPT_RESULT"
         echo "test coucou"
     
     - name: Notify results are ready
       uses: "hugoalh/GitHubAction.SendToIFTTT@v3.1.2"
+      if: ${{ $JPN_BASEBALL_SCRIPT_RESULT == 'RESULTS_READY' }}
       with:
         webhook_eventname: "JPNBaseBallResultsReady"
         webhook_key: "${{secrets.IFTTT_WEBHOOK_KEY}}"

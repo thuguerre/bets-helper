@@ -1,9 +1,6 @@
 # This workflow will install Python dependencies, run tests and lint with a variety of Python versions
 # For more information see: https://help.github.com/actions/language-and-framework-guides/using-python-with-github-actions
 
-# How to set an environment variable without deprecated set-env
-# https://github.blog/changelog/2020-10-01-github-actions-deprecating-set-env-and-add-path-commands/
-
 name: Build And Test
 
 on:

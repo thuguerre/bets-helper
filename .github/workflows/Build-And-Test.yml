@@ -52,6 +52,7 @@ jobs:
       run: |
         python baseball-japan/main.py upload:no
         echo $SCRIPT_RESULT
+        echo "test coucou"
     
     - name: Notify results are ready
       uses: "hugoalh/GitHubAction.SendToIFTTT@v3.1.2"

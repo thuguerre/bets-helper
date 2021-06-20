@@ -67,7 +67,7 @@ class NPBCrawler:
                 print_match = False
 
             if print_match:
-                print(match_day[0:4] + "-" + match_day[4:6] + "-" + match_day[6:9] + "\t\t" + league_to_get + "\t\t\t " + match_result)
+                logging.info(match_day[0:4] + "-" + match_day[4:6] + "-" + match_day[6:9] + "\t\t" + league_to_get + "\t\t\t " + match_result)
                 month_results.append([match_day[6:9] + "/" + match_day[4:6] + "/" + match_day[0:4], league_to_get, match_result])
         
         return month_results

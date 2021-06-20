@@ -15,9 +15,6 @@ on:
     paths:
     - '**'
   
-  schedule:
-    - cron: '5 17 * * *'
-
 jobs:
   build:
 
@@ -28,20 +25,6 @@ jobs:
         python-version: [3.8]
 
     steps:
-    - name: Set $UPLOAD Env Var on Schedule
-      if: ${{ github.event_name == 'schedule' }}
-      run: |
-        echo "UPLOAD=yes" >> $GITHUB_ENV
-    
-    - name: Set $UPLOAD Env Var on Push or Pull_Request
-      if: ${{ github.event_name == 'push' || github.event_name == 'pull_request' }}
-      run: |
-        echo "UPLOAD=no" >> $GITHUB_ENV
-
-    - name: check env value
-      run: |
-        echo $UPLOAD
-
     - uses: actions/checkout@v2
     - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v2
@@ -70,4 +53,4 @@ jobs:
           SA_CLIENT_ID: ${{ secrets.SA_CLIENT_ID }}
           SA_CLIENT_X509_CERT_URL: ${{ secrets.SA_CLIENT_X509_CERT_URL }}
       run: |
-        python baseball-japan/main.py upload:$UPLOAD
+        python baseball-japan/main.py upload:no

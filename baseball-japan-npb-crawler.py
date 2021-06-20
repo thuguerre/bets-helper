@@ -198,6 +198,7 @@ if __name__ == '__main__':
     logging.getLogger().setLevel(logging.WARN)
 
     today = date.today()
+    print("running datetime:", today)
 
     start_year = today.strftime("%Y")
     start_month = today.strftime("%m")

@@ -20,10 +20,10 @@ def printDocumentation():
 #
 if __name__ == '__main__':
     
-    logging.getLogger().setLevel(logging.WARN)
+    logging.getLogger().setLevel(logging.INFO)
 
     today = date.today()
-    print("running datetime:", datetime.now())
+    logging.info("running datetime: " + str(datetime.now()))
 
     # defining default start date from which retrieving results
     start_year = today.strftime("%Y")
@@ -89,7 +89,6 @@ if __name__ == '__main__':
         sys.exit()
 
     # retrieving results from NPB website
-    print("retrieving result from: " + start_year + "/" + start_month + "/" + start_day)
     crawler = NPBCrawler()
     results = crawler.retrieve_results(start_year, start_month, start_day, to_year, to_month, to_day, 'Regular Season')
 

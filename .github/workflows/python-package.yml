@@ -19,6 +19,9 @@ on:
     - cron: '5 * * * *'
   
   workflow_dispatch:
+    inputs:
+      name:
+        description: 'Test'
 
 jobs:
   build:

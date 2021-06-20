@@ -1,4 +1,4 @@
-import sys, logging
+import sys, logging, os
 from main_local_helper import LocalExecHelper
 from datetime import date, timedelta, datetime
 from NPBCrawler import NPBCrawler
@@ -106,6 +106,9 @@ if __name__ == '__main__':
     crawler = NPBCrawler()
     results = crawler.retrieve_results(start_year, start_month, start_day, to_year, to_month, to_day, 'Regular Season')
 
-    if(upload):
+    if(upload and len(results)>0):
         helper = SpreadSheetHelper()
         helper.upload_results(results)
+        print("RESULTS_UPDATED")
+    else:
+        print("NO_RESULTS_UPDATED")

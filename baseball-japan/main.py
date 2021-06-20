@@ -110,4 +110,5 @@ if __name__ == '__main__':
         helper = SpreadSheetHelper()
         helper.upload_results(results)
     
+    print("test exit")
     sys.exit(413)

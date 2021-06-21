@@ -2,7 +2,7 @@ name: Get Japan BaseBall Results
 
 on:
   schedule:
-    - cron: '20 */1 * * *'
+    - cron: '20 14-21 * * *'
 
 jobs:
   build:

@@ -77,7 +77,7 @@ class NPBCrawler:
 
             if add_match:
                 match_result_to_add = MatchResult(
-                    match_day[6:9] + "/" + match_day[4:6] + "/" + match_day[0:4],
+                    match_day[0:4] + "-" + match_day[4:6] + "-" + match_day[6:9],
                     "baseball",
                     "japan",
                     league_to_get,

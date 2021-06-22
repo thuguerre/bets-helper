@@ -18,3 +18,6 @@ class BetsMongoDB:
 
     def insertMatchResult(self, match_result: MatchResult):
         return self.db.match_results.insert_one(match_result.toJSON())
+
+    def getLastMatchResultDate(self):
+        return self.db.match_results.find().sort("date", -1).limit(1).next().get('date')

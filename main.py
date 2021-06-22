@@ -61,6 +61,25 @@ if __name__ == '__main__':
             to_month = last_result_date.strftime("%m")
             to_day = last_result_date.strftime("%d")
 
+        elif args == "from:complete_mongodb":
+
+            mongodb_user = os.environ['MONGODB_USER']
+            mongodb_pwd = os.environ['MONGODB_PWD']
+            mongodb_name = os.environ['MONGODB_NAME']
+
+            bets_db = BetsMongoDB(mongodb_user, mongodb_pwd, mongodb_name)
+            last_result_date = bets_db.getLastMatchResultDate()
+            last_result_date = datetime.strptime(last_result_date, '%Y-%m-%d')
+            last_result_date = last_result_date + timedelta(days=1)
+
+            start_year = last_result_date.strftime("%Y")
+            start_month = last_result_date.strftime("%m")
+            start_day = last_result_date.strftime("%d")
+
+            to_year = last_result_date.strftime("%Y")
+            to_month = last_result_date.strftime("%m")
+            to_day = last_result_date.strftime("%d")
+
         elif args.startswith("from:"):
             start_year = args[5:9]
             start_month = args[9:11]

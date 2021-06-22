@@ -52,7 +52,7 @@ class SpreadSheetHelper:
                 'A' + next_row + ':U' + next_row,
                 [
                     [
-                        result.date,
+                        self.formatDate(result.date),
                         '=WEEKDAY(A' + next_row + ';2)',
                         result.league,
                         '=IF(G'+next_row+'<K'+next_row+';G'+next_row+';K'+next_row+')',
@@ -77,3 +77,7 @@ class SpreadSheetHelper:
                 ],
                 raw=False
             )
+
+    def formatDate(self, date: str) -> str:
+        splitted_date = date.split("-")
+        return splitted_date[2] + "/" + splitted_date[1] + "/" + splitted_date[0]

@@ -1,5 +1,7 @@
-import pytest, unittest
+import pytest
+import unittest
 from betsmodels import MatchResult
+
 
 class TestBetsModels(unittest.TestCase):
 
@@ -35,4 +37,3 @@ class TestBetsModels(unittest.TestCase):
                 "visitor_score": visitor_score
             }
         )
-

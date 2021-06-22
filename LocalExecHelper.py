@@ -23,4 +23,5 @@ class LocalExecHelper:
 
         os.environ["MONGODB_USER"]=config('MONGODB_USER')
         os.environ["MONGODB_PWD"]=config('MONGODB_PWD')
+        os.environ["MONGODB_NAME"]=config('MONGODB_NAME')
 

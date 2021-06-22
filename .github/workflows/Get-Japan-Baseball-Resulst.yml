@@ -36,7 +36,7 @@ jobs:
           SA_CLIENT_ID: ${{ secrets.SA_CLIENT_ID }}
           SA_CLIENT_X509_CERT_URL: ${{ secrets.SA_CLIENT_X509_CERT_URL }}
       run: |
-        result=$(python baseball-japan/main.py from:complete_spreadsheet upload:yes)
+        result=$(python main.py from:complete_spreadsheet upload:yes)
         echo "::set-output name=JPN_BASEBALL_SCRIPT_RESULT::$result"
 
     - name: Notify results are ready

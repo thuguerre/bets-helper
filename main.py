@@ -1,8 +1,7 @@
 import sys, logging, os
-from main_local_helper import LocalExecHelper
 from datetime import date, timedelta, datetime
-from NPBCrawler import NPBCrawler
-from SpreadSheetHelper import SpreadSheetHelper
+from baseball_japan import NPBCrawler
+from LocalExecHelper import LocalExecHelper
 
 #
 # Documentation Printing Method

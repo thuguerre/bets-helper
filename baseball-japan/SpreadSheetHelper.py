@@ -49,7 +49,7 @@ class SpreadSheetHelper:
 
         return client.open(SPREADSHEET_NAME).get_worksheet(SPREADSHEET_INDEX)
 
-    def upload_results(self, results:list[MatchResult]):
+    def upload_results(self, results):
 
         for result in results:
             next_row = self.next_available_row()

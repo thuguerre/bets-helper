@@ -88,7 +88,7 @@ class NPBCrawler:
         return month_results
 
 
-    def retrieve_results(self, start_year, start_month, start_day, to_year, to_month, to_day, league_to_get) -> list[MatchResult]:
+    def retrieve_results(self, start_year, start_month, start_day, to_year, to_month, to_day, league_to_get):
 
         logging.info("retrieve results from:" + start_year + "-" + start_month + "-" + start_day + " to " + to_year + "-" + to_month + "-" + to_day)
 

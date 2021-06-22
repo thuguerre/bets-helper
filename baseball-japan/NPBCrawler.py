@@ -4,6 +4,11 @@ import re
 import sys, os
 from urllib3 import poolmanager
 
+currentdir = os.path.dirname(os.path.realpath(__file__))
+parentdir = os.path.dirname(currentdir)
+sys.path.append(parentdir)
+from betsmodels import MatchResult
+
 URL_Farm_Leagues = "https://npb.jp/bis/eng/<YEAR>/calendar/index_farm_<MONTH>.html"
 URL_Regular_Season = "https://npb.jp/bis/eng/<YEAR>/calendar/index_<MONTH>.html"
 
@@ -68,7 +73,17 @@ class NPBCrawler:
 
             if add_match:
                 logging.info(match_day[0:4] + "-" + match_day[4:6] + "-" + match_day[6:9] + "\t\t" + league_to_get + "\t\t\t " + match_result)
-                month_results.append([match_day[6:9] + "/" + match_day[4:6] + "/" + match_day[0:4], league_to_get, match_result])
+                match_result_to_add = MatchResult(
+                    match_day[6:9] + "/" + match_day[4:6] + "/" + match_day[0:4],
+                    "baseball",
+                    "japan",
+                    league_to_get,
+                    match_result.split()[0],
+                    match_result.split()[1],
+                    match_result.split()[4],
+                    match_result.split()[3]
+                )
+                month_results.append(match_result_to_add)
         
         return month_results
 

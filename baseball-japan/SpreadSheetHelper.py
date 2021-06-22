@@ -53,12 +53,12 @@ class SpreadSheetHelper:
                 'A' + next_row + ':U' + next_row,
                 [
                     [
-                        result[0],
+                        result.date,
                         '=WEEKDAY(A' + next_row + ';2)',
-                        result[1],
+                        result.league,
                         '=IF(G'+next_row+'<K'+next_row+';G'+next_row+';K'+next_row+')',
                         '=IF(G'+next_row+'>K'+next_row+';G'+next_row+';K'+next_row+')',
-                        result[2],
+                        result.home_team + " " + result.home_score + " - " + result.visitor_score + " " + result.visitor_team,
                         '=SPLIT(F'+next_row+';" ")',
                         '',
                         '',

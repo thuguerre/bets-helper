@@ -3,6 +3,7 @@ from datetime import date, timedelta, datetime
 from baseball_japan import NPBCrawler
 from baseball_japan import SpreadSheetHelper
 from LocalExecHelper import LocalExecHelper
+from mongodb.BetsMongoDB import BetsMongoDB
 
 #
 # Documentation Printing Method
@@ -13,6 +14,7 @@ def printDocumentation():
     print("args 'to:YYYYMMDD'. If not set, default value is today.")
     print("args 'yesterday': set FROM and TO date limits at yesterday's date.")
     print("args 'upload_spreadsheet', set to yes or no, to upload to spreadsheet.")
+    print("args 'upload_mongodb', set to yes or no, to upload to MongoDB.")
     print("args 'local_exec' to load required environment variables. Must be first argument, to let others working.")
 
 #
@@ -37,6 +39,7 @@ if __name__ == '__main__':
 
     # securizing uploading: by default, we stay local
     upload_spreadsheet = False
+    upload_mongodb = False
 
     for args in sys.argv:
 
@@ -81,6 +84,12 @@ if __name__ == '__main__':
         elif args.lower() == "upload_spreadsheet:no":
             upload_spreadsheet = False
 
+        elif args.lower() == "upload_mongodb:yes":
+            upload_mongodb = True
+
+        elif args.lower() == "upload_mongodb:no":
+            upload_mongodb = False
+
         elif args == '-h' or args == "-help" or args == "--h" or args == "--help":
             printDocumentation()
             sys.exit()
@@ -109,6 +118,20 @@ if __name__ == '__main__':
     if(upload_spreadsheet and len(match_results)>0):
         helper = SpreadSheetHelper()
         helper.upload_results(match_results)
+        print("RESULTS_UPDATED")
+    else:
+        print("NO_RESULTS_UPDATED")
+
+    if(upload_mongodb and len(match_results)>0):
+        
+        mongodb_user = os.environ['MONGODB_USER']
+        mongodb_pwd = os.environ['MONGODB_PWD']
+
+        bets_db = BetsMongoDB(mongodb_user, mongodb_pwd)
+        for match_result in match_results:
+            result = bets_db.insertMatchResult(match_result)
+            print(result)
+
         print("RESULTS_UPDATED")
     else:
         print("NO_RESULTS_UPDATED")

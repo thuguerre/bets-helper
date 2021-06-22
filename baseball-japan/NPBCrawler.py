@@ -29,7 +29,7 @@ class TLSAdapter(requests.adapters.HTTPAdapter):
 
 class NPBCrawler:
 
-    def retrieve_month_results(self, year_to_get, month_to_get, league_to_get, from_day, to_day) -> list[MatchResult]:
+    def retrieve_month_results(self, year_to_get, month_to_get, league_to_get, from_day, to_day):
 
         if len(month_to_get) == 1:
             month_to_get = "0" + month_to_get

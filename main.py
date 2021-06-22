@@ -1,6 +1,7 @@
 import sys, logging, os
 from datetime import date, timedelta, datetime
 from baseball_japan import NPBCrawler
+from baseball_japan import SpreadSheetHelper
 from LocalExecHelper import LocalExecHelper
 
 #

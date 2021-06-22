@@ -120,7 +120,7 @@ if __name__ == '__main__':
         helper.upload_results(match_results)
         print("RESULTS_UPDATED")
     else:
-        print("NO_RESULTS_UPDATED")
+        print("NO_RESULTS")
 
     if(upload_mongodb and len(match_results)>0):
         
@@ -134,4 +134,4 @@ if __name__ == '__main__':
 
         print("RESULTS_UPDATED")
     else:
-        print("NO_RESULTS_UPDATED")
+        print("NO_RESULTS")

@@ -1,4 +1,5 @@
-import sys, os, datetime
+import os
+import datetime
 import gspread
 
 SPREADSHEET_NAME = "Suivi paris"

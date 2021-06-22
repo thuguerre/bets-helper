@@ -1,4 +1,5 @@
-import pytest, unittest
+import pytest
+import unittest
 from betsmodels import MatchResult
 
 

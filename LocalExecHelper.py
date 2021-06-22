@@ -1,7 +1,8 @@
 # using a .env file (ignored from github) to store environment variable to automatically load using decouple.config
 # https://able.bio/rhett/how-to-set-and-get-environment-variables-in-python--274rgt5
 
-import logging, os
+import logging
+import os
 from decouple import config
 
 
@@ -22,6 +23,6 @@ class LocalExecHelper:
         os.environ["SA_CLIENT_ID"] = config('SA_CLIENT_ID')
         os.environ["SA_CLIENT_X509_CERT_URL"] = config('SA_CLIENT_X509_CERT_URL')
 
-        os.environ["MONGODB_USER"]=config('MONGODB_USER')
-        os.environ["MONGODB_PWD"]=config('MONGODB_PWD')
-        os.environ["MONGODB_NAME"]=config('MONGODB_NAME')
+        os.environ["MONGODB_USER"] = config('MONGODB_USER')
+        os.environ["MONGODB_PWD"] = config('MONGODB_PWD')
+        os.environ["MONGODB_NAME"] = config('MONGODB_NAME')

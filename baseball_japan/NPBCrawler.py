@@ -1,7 +1,9 @@
 import logging
-import requests, ssl
+import requests
+import ssl
 import re
-import sys, os
+import sys
+import os
 from urllib3 import poolmanager
 
 currentdir = os.path.dirname(os.path.realpath(__file__))

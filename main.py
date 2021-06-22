@@ -1,4 +1,6 @@
-import sys, logging, os
+import sys
+import logging
+import os
 from datetime import date, timedelta, datetime
 from baseball_japan import NPBCrawler
 from baseball_japan import SpreadSheetHelper

@@ -48,6 +48,7 @@ if __name__ == '__main__':
     for args in sys.argv:
 
         if args == "from:complete_spreadsheet":
+
             helper = SpreadSheetHelper()
             last_result_date = helper.get_last_result_date()
             last_result_date = datetime.strptime(last_result_date, '%d/%m/%Y')
@@ -63,11 +64,7 @@ if __name__ == '__main__':
 
         elif args == "from:complete_mongodb":
 
-            mongodb_user = os.environ['MONGODB_USER']
-            mongodb_pwd = os.environ['MONGODB_PWD']
-            mongodb_name = os.environ['MONGODB_NAME']
-
-            bets_db = BetsMongoDB(mongodb_user, mongodb_pwd, mongodb_name)
+            bets_db = BetsMongoDB()
             last_result_date = bets_db.getLastMatchResultDate()
             last_result_date = datetime.strptime(last_result_date, '%Y-%m-%d')
             last_result_date = last_result_date + timedelta(days=1)
@@ -147,11 +144,7 @@ if __name__ == '__main__':
 
     if(upload_mongodb and len(match_results) > 0):
 
-        mongodb_user = os.environ['MONGODB_USER']
-        mongodb_pwd = os.environ['MONGODB_PWD']
-        mongodb_name = os.environ['MONGODB_NAME']
-
-        bets_db = BetsMongoDB(mongodb_user, mongodb_pwd, mongodb_name)
+        bets_db = BetsMongoDB()
         for match_result in match_results:
             result = bets_db.insertMatchResult(match_result)
 

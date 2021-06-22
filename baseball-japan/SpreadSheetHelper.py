@@ -1,6 +1,11 @@
-import os, datetime
+import sys, os, datetime
 import gspread
 from oauth2client.service_account import ServiceAccountCredentials
+
+currentdir = os.path.dirname(os.path.realpath(__file__))
+parentdir = os.path.dirname(currentdir)
+sys.path.append(parentdir)
+from betsmodels import MatchResult
 
 SPREADSHEET_NAME = "Suivi paris"
 SPREADSHEET_INDEX = 6               # index of 'Baseball Japan RAW', starting from 0

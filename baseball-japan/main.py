@@ -12,7 +12,7 @@ def printDocumentation():
     print("args 'from:YYYYMMDD'. If not set, default value is today. Use 'from:complete_spreadsheet' to retrieve results using last date retrieved in remote spreadsheet.")
     print("args 'to:YYYYMMDD'. If not set, default value is today.")
     print("args 'yesterday': set FROM and TO date limits at yesterday's date.")
-    print("args 'upload', set to yes or no, to upload to spreadsheet.")
+    print("args 'upload_spreadsheet', set to yes or no, to upload to spreadsheet.")
     print("args 'local_exec' to load required environment variables. Must be first argument, to let others working.")
 
 #
@@ -36,7 +36,7 @@ if __name__ == '__main__':
     to_day = today.strftime("%d")
 
     # securizing uploading: by default, we stay local
-    upload = False
+    upload_spreadsheet = False
 
     for args in sys.argv:
 
@@ -75,11 +75,11 @@ if __name__ == '__main__':
             to_month = yesterday.strftime("%m")
             to_day = yesterday.strftime("%d")
 
-        elif args.lower() == "upload:yes":
-            upload = True
+        elif args.lower() == "upload_spreadsheet:yes":
+            upload_spreadsheet = True
 
-        elif args.lower() == "upload:no":
-            upload = False
+        elif args.lower() == "upload_spreadsheet:no":
+            upload_spreadsheet = False
 
         elif args == '-h' or args == "-help" or args == "--h" or args == "--help":
             printDocumentation()
@@ -104,11 +104,11 @@ if __name__ == '__main__':
 
     # retrieving results from NPB website
     crawler = NPBCrawler()
-    results = crawler.retrieve_results(start_year, start_month, start_day, to_year, to_month, to_day, 'Regular Season')
+    match_results = crawler.retrieve_results(start_year, start_month, start_day, to_year, to_month, to_day, 'Regular Season')
 
-    if(upload and len(results)>0):
+    if(upload_spreadsheet and len(match_results)>0):
         helper = SpreadSheetHelper()
-        helper.upload_results(results)
+        helper.upload_results(match_results)
         print("RESULTS_UPDATED")
     else:
         print("NO_RESULTS_UPDATED")

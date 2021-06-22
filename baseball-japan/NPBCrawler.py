@@ -58,15 +58,15 @@ class NPBCrawler:
             match_day = day_regex.search(onematch).group(1)
             match_result = matchresult_regex.search(onematch).group(1)
 
-            print_match = True
+            add_match = True
             
             if from_day > 0 and from_day > int(match_day[6:9]):
-                print_match = False
+                add_match = False
 
             if to_day > 0 and to_day < int(match_day[6:9]):
-                print_match = False
+                add_match = False
 
-            if print_match:
+            if add_match:
                 logging.info(match_day[0:4] + "-" + match_day[4:6] + "-" + match_day[6:9] + "\t\t" + league_to_get + "\t\t\t " + match_result)
                 month_results.append([match_day[6:9] + "/" + match_day[4:6] + "/" + match_day[0:4], league_to_get, match_result])
         

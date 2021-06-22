@@ -1,6 +1,7 @@
 import pytest, unittest
 from betsmodels import MatchResult
 
+
 class TestBetsModels(unittest.TestCase):
 
     def setUp(self):
@@ -35,4 +36,3 @@ class TestBetsModels(unittest.TestCase):
                 "visitor_score": visitor_score
             }
         )
-

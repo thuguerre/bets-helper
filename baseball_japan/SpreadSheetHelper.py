@@ -1,14 +1,9 @@
 import sys, os, datetime
 import gspread
-from oauth2client.service_account import ServiceAccountCredentials
-
-currentdir = os.path.dirname(os.path.realpath(__file__))
-parentdir = os.path.dirname(currentdir)
-sys.path.append(parentdir)
-from betsmodels import MatchResult
 
 SPREADSHEET_NAME = "Suivi paris"
 SPREADSHEET_INDEX = 6               # index of 'Baseball Japan RAW', starting from 0
+
 
 class SpreadSheetHelper:
 
@@ -31,8 +26,6 @@ class SpreadSheetHelper:
 
         # use creds to create a client to interact with the Google Drive API
         # example from: https://docs.gspread.org/en/latest/oauth2.html
-        scope = ['https://spreadsheets.google.com/feeds','https://www.googleapis.com/auth/drive']
-
         credentials = {
             "type": "service_account",
             "project_id": os.environ["SA_PROJECT_ID"],

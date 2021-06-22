@@ -5,6 +5,7 @@ from baseball_japan import SpreadSheetHelper
 from LocalExecHelper import LocalExecHelper
 from mongodb.BetsMongoDB import BetsMongoDB
 
+
 #
 # Documentation Printing Method
 #
@@ -17,11 +18,12 @@ def printDocumentation():
     print("args 'upload_mongodb', set to yes or no, to upload to MongoDB.")
     print("args 'local_exec' to load required environment variables. Must be first argument, to let others working.")
 
+
 #
 # Main Function
 #
 if __name__ == '__main__':
-    
+
     logging.getLogger().setLevel(logging.INFO)
 
     today = date.today()
@@ -56,7 +58,7 @@ if __name__ == '__main__':
             to_year = last_result_date.strftime("%Y")
             to_month = last_result_date.strftime("%m")
             to_day = last_result_date.strftime("%d")
-        
+
         elif args.startswith("from:"):
             start_year = args[5:9]
             start_month = args[9:11]
@@ -115,15 +117,15 @@ if __name__ == '__main__':
     crawler = NPBCrawler()
     match_results = crawler.retrieve_results(start_year, start_month, start_day, to_year, to_month, to_day, 'Regular Season')
 
-    if(upload_spreadsheet and len(match_results)>0):
+    if(upload_spreadsheet and len(match_results) > 0):
         helper = SpreadSheetHelper()
         helper.upload_results(match_results)
         print("RESULTS_UPDATED")
     else:
         print("NO_RESULTS")
 
-    if(upload_mongodb and len(match_results)>0):
-        
+    if(upload_mongodb and len(match_results) > 0):
+
         mongodb_user = os.environ['MONGODB_USER']
         mongodb_pwd = os.environ['MONGODB_PWD']
         mongodb_name = os.environ['MONGODB_NAME']

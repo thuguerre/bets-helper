@@ -12,6 +12,7 @@ from betsmodels import MatchResult
 URL_Farm_Leagues = "https://npb.jp/bis/eng/<YEAR>/calendar/index_farm_<MONTH>.html"
 URL_Regular_Season = "https://npb.jp/bis/eng/<YEAR>/calendar/index_<MONTH>.html"
 
+
 # Adapter to prevent SSL Signature error while getting NPB web site content
 # https://github.com/psf/requests/issues/4775
 class TLSAdapter(requests.adapters.HTTPAdapter):
@@ -26,6 +27,7 @@ class TLSAdapter(requests.adapters.HTTPAdapter):
                 block=block,
                 ssl_version=ssl.PROTOCOL_TLS,
                 ssl_context=ctx)
+
 
 class NPBCrawler:
 
@@ -42,7 +44,7 @@ class NPBCrawler:
             url = URL_Farm_Leagues.replace('<YEAR>', year_to_get).replace('<MONTH>', month_to_get)
             day_regex = re.compile('<a href="/bis/eng/'+year_to_get+'/games/fs([0-9]{8})')
 
-        elif league_to_get == 'Regular Season': 
+        elif league_to_get == 'Regular Season':
             url = URL_Regular_Season.replace('<YEAR>', year_to_get).replace('<MONTH>', month_to_get)
             day_regex = re.compile('<a href="/bis/eng/'+year_to_get+'/games/s([0-9]{8})')
 
@@ -51,7 +53,7 @@ class NPBCrawler:
         session = requests.session()
         session.mount('https://', TLSAdapter())
         wholepage = session.get(url)
-        
+
         allmatches_regex = re.compile('<a href="[a-zA-Z0-9\.\/]*">[A-Z]{1,2} [0-9*]{1,3} - [0-9*]{1,2} [A-Z]{1,2}')
         matchresult_regex = re.compile('([A-Z]{1,2} [0-9*]{1,3} - [0-9*]{1,2} [A-Z]{1,2})')
 
@@ -64,7 +66,7 @@ class NPBCrawler:
             match_result = matchresult_regex.search(onematch).group(1)
 
             add_match = True
-            
+
             if from_day > 0 and from_day > int(match_day[6:9]):
                 add_match = False
 
@@ -72,7 +74,6 @@ class NPBCrawler:
                 add_match = False
 
             if add_match:
-                logging.info(match_day[0:4] + "-" + match_day[4:6] + "-" + match_day[6:9] + "\t\t" + league_to_get + "\t\t\t " + match_result)
                 match_result_to_add = MatchResult(
                     match_day[6:9] + "/" + match_day[4:6] + "/" + match_day[0:4],
                     "baseball",
@@ -83,10 +84,10 @@ class NPBCrawler:
                     match_result.split()[4],
                     match_result.split()[3]
                 )
+                logging.info(match_result_to_add.toJSON())
                 month_results.append(match_result_to_add)
-        
-        return month_results
 
+        return month_results
 
     def retrieve_results(self, start_year, start_month, start_day, to_year, to_month, to_day, league_to_get):
 
@@ -99,7 +100,7 @@ class NPBCrawler:
 
         increment_month = True
         while increment_month:
-            
+
             local_from_day = 0
             local_to_day = 0
 

@@ -6,6 +6,7 @@ parentdir = os.path.dirname(currentdir)
 sys.path.append(parentdir)
 from betsmodels import MatchResult
 
+
 class BetsMongoDB:
 
     db = None

@@ -126,8 +126,9 @@ if __name__ == '__main__':
         
         mongodb_user = os.environ['MONGODB_USER']
         mongodb_pwd = os.environ['MONGODB_PWD']
+        mongodb_name = os.environ['MONGODB_NAME']
 
-        bets_db = BetsMongoDB(mongodb_user, mongodb_pwd)
+        bets_db = BetsMongoDB(mongodb_user, mongodb_pwd, mongodb_name)
         for match_result in match_results:
             result = bets_db.insertMatchResult(match_result)
             print(result)

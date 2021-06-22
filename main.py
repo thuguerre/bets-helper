@@ -1,8 +1,9 @@
 import sys, logging, os
-from main_local_helper import LocalExecHelper
 from datetime import date, timedelta, datetime
-from NPBCrawler import NPBCrawler
-from SpreadSheetHelper import SpreadSheetHelper
+from baseball_japan import NPBCrawler
+from baseball_japan import SpreadSheetHelper
+from LocalExecHelper import LocalExecHelper
+from mongodb.BetsMongoDB import BetsMongoDB
 
 #
 # Documentation Printing Method
@@ -12,7 +13,8 @@ def printDocumentation():
     print("args 'from:YYYYMMDD'. If not set, default value is today. Use 'from:complete_spreadsheet' to retrieve results using last date retrieved in remote spreadsheet.")
     print("args 'to:YYYYMMDD'. If not set, default value is today.")
     print("args 'yesterday': set FROM and TO date limits at yesterday's date.")
-    print("args 'upload', set to yes or no, to upload to spreadsheet.")
+    print("args 'upload_spreadsheet', set to yes or no, to upload to spreadsheet.")
+    print("args 'upload_mongodb', set to yes or no, to upload to MongoDB.")
     print("args 'local_exec' to load required environment variables. Must be first argument, to let others working.")
 
 #
@@ -36,7 +38,8 @@ if __name__ == '__main__':
     to_day = today.strftime("%d")
 
     # securizing uploading: by default, we stay local
-    upload = False
+    upload_spreadsheet = False
+    upload_mongodb = False
 
     for args in sys.argv:
 
@@ -75,11 +78,17 @@ if __name__ == '__main__':
             to_month = yesterday.strftime("%m")
             to_day = yesterday.strftime("%d")
 
-        elif args.lower() == "upload:yes":
-            upload = True
+        elif args.lower() == "upload_spreadsheet:yes":
+            upload_spreadsheet = True
 
-        elif args.lower() == "upload:no":
-            upload = False
+        elif args.lower() == "upload_spreadsheet:no":
+            upload_spreadsheet = False
+
+        elif args.lower() == "upload_mongodb:yes":
+            upload_mongodb = True
+
+        elif args.lower() == "upload_mongodb:no":
+            upload_mongodb = False
 
         elif args == '-h' or args == "-help" or args == "--h" or args == "--help":
             printDocumentation()
@@ -104,11 +113,25 @@ if __name__ == '__main__':
 
     # retrieving results from NPB website
     crawler = NPBCrawler()
-    results = crawler.retrieve_results(start_year, start_month, start_day, to_year, to_month, to_day, 'Regular Season')
+    match_results = crawler.retrieve_results(start_year, start_month, start_day, to_year, to_month, to_day, 'Regular Season')
 
-    if(upload and len(results)>0):
+    if(upload_spreadsheet and len(match_results)>0):
         helper = SpreadSheetHelper()
-        helper.upload_results(results)
+        helper.upload_results(match_results)
         print("RESULTS_UPDATED")
     else:
-        print("NO_RESULTS_UPDATED")
+        print("NO_RESULTS")
+
+    if(upload_mongodb and len(match_results)>0):
+        
+        mongodb_user = os.environ['MONGODB_USER']
+        mongodb_pwd = os.environ['MONGODB_PWD']
+
+        bets_db = BetsMongoDB(mongodb_user, mongodb_pwd)
+        for match_result in match_results:
+            result = bets_db.insertMatchResult(match_result)
+            print(result)
+
+        print("RESULTS_UPDATED")
+    else:
+        print("NO_RESULTS")

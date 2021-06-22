@@ -1,6 +1,11 @@
-import os, datetime
+import sys, os, datetime
 import gspread
 from oauth2client.service_account import ServiceAccountCredentials
+
+currentdir = os.path.dirname(os.path.realpath(__file__))
+parentdir = os.path.dirname(currentdir)
+sys.path.append(parentdir)
+from betsmodels import MatchResult
 
 SPREADSHEET_NAME = "Suivi paris"
 SPREADSHEET_INDEX = 6               # index of 'Baseball Japan RAW', starting from 0
@@ -14,7 +19,7 @@ class SpreadSheetHelper:
 
     def get_last_result_date(self):
         values_list = self.jpn_raw_sheet.col_values(1)
-        values_list.remove('Date')
+        values_list.remove('Date')  # removing column title from values
         values_list.sort(key=lambda x: datetime.datetime.strptime(x, '%d/%m/%Y'))
         return values_list[-1]
 
@@ -53,12 +58,12 @@ class SpreadSheetHelper:
                 'A' + next_row + ':U' + next_row,
                 [
                     [
-                        result[0],
+                        result.date,
                         '=WEEKDAY(A' + next_row + ';2)',
-                        result[1],
+                        result.league,
                         '=IF(G'+next_row+'<K'+next_row+';G'+next_row+';K'+next_row+')',
                         '=IF(G'+next_row+'>K'+next_row+';G'+next_row+';K'+next_row+')',
-                        result[2],
+                        result.home_team + " " + result.home_score + " - " + result.visitor_score + " " + result.visitor_team,
                         '=SPLIT(F'+next_row+';" ")',
                         '',
                         '',

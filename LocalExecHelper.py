@@ -21,3 +21,6 @@ class LocalExecHelper:
         os.environ["SA_CLIENT_ID"]=config('SA_CLIENT_ID')
         os.environ["SA_CLIENT_X509_CERT_URL"]=config('SA_CLIENT_X509_CERT_URL')
 
+        os.environ["MONGODB_USER"]=config('MONGODB_USER')
+        os.environ["MONGODB_PWD"]=config('MONGODB_PWD')
+

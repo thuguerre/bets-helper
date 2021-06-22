@@ -1,4 +1,10 @@
 from pymongo import MongoClient
+import sys, os
+
+currentdir = os.path.dirname(os.path.realpath(__file__))
+parentdir = os.path.dirname(currentdir)
+sys.path.append(parentdir)
+from betsmodels import MatchResult
 
 class BetsMongoDB:
 
@@ -8,29 +14,5 @@ class BetsMongoDB:
         client = MongoClient("mongodb+srv://"+mongodb_user+":"+mongodb_pwd+"@cluster0.gu9bi.mongodb.net/bets_db?retryWrites=true&w=majority")
         self.db = client.bets_db
 
-    def insertMatchResult(self, date, sport, country, league, home_team, home_result, visitor_team, visitor_result):
-
-        match_result = {
-            'date': date,
-            'sport': sport,
-            'country': country,
-            'league': league,
-            'home_team': home_team,
-            'home_result': home_result,
-            'visitor_team': visitor_team,
-            'visitor_result': visitor_result
-        }
-
-        return self.db.match_results.insert_one(match_result)
-
-    def insertJPNBaseBallMatchResult(self, date, league, home_team, home_result, visitor_team, visitor_result):
-        return self.insertMatchResult(
-            date,
-            'baseball',
-            'japan',
-            league,
-            home_team,
-            home_result,
-            visitor_team,
-            visitor_result
-        )
+    def insertMatchResult(self, match_result: MatchResult):
+        return self.db.match_results.insert_one(match_result.toJSON())

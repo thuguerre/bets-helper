@@ -29,7 +29,7 @@ class TLSAdapter(requests.adapters.HTTPAdapter):
 
 class NPBCrawler:
 
-    def retrieve_month_results(self, year_to_get, month_to_get, league_to_get, from_day, to_day):
+    def retrieve_month_results(self, year_to_get, month_to_get, league_to_get, from_day, to_day) -> list[MatchResult]:
 
         if len(month_to_get) == 1:
             month_to_get = "0" + month_to_get
@@ -88,7 +88,7 @@ class NPBCrawler:
         return month_results
 
 
-    def retrieve_results(self, start_year, start_month, start_day, to_year, to_month, to_day, league_to_get):
+    def retrieve_results(self, start_year, start_month, start_day, to_year, to_month, to_day, league_to_get) -> list[MatchResult]:
 
         logging.info("retrieve results from:" + start_year + "-" + start_month + "-" + start_day + " to " + to_year + "-" + to_month + "-" + to_day)
 

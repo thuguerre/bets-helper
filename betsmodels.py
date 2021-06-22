@@ -12,7 +12,7 @@ class MatchResult:
     def __init__(self):
         pass
 
-    def __init__(self, date, sport, country, league, home_team, home_score, visitor_team, visitor_score):
+    def __init__(self, date:str, sport:str, country:str, league:str, home_team:str, home_score:int, visitor_team:str, visitor_score:int):
         self.date = date
         self.sport = sport
         self.country = country
@@ -22,7 +22,7 @@ class MatchResult:
         self.visitor_team = visitor_team
         self.visitor_score = visitor_score
     
-    def toJSON(self):
+    def toJSON(self) -> dict:
         return {
             "date": self.date,
             "sport": self.sport,

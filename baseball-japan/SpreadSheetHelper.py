@@ -14,7 +14,7 @@ class SpreadSheetHelper:
 
     def get_last_result_date(self):
         values_list = self.jpn_raw_sheet.col_values(1)
-        values_list.remove('Date')
+        values_list.remove('Date')  # removing column title from values
         values_list.sort(key=lambda x: datetime.datetime.strptime(x, '%d/%m/%Y'))
         return values_list[-1]
 
@@ -44,7 +44,7 @@ class SpreadSheetHelper:
 
         return client.open(SPREADSHEET_NAME).get_worksheet(SPREADSHEET_INDEX)
 
-    def upload_results(self, results):
+    def upload_results(self, results:list[MatchResult]):
 
         for result in results:
             next_row = self.next_available_row()

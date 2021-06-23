@@ -1,4 +1,5 @@
 import os
+import typing
 from pydrive.auth import GoogleAuth
 from pydrive.drive import GoogleDrive
 from oauth2client.service_account import ServiceAccountCredentials
@@ -36,13 +37,12 @@ class GoogleDriveHelper:
             gfile.SetContentFile(upload_file)
             gfile.Upload()
 
-    def download_files(self):
+    def download_files(self) -> typing.List[str]:
 
         downloaded_files = []
 
         file_list = self.drive.ListFile({'q': "'root' in parents and trashed=false"}).GetList()
         for drive_file in file_list:
-            print('title: %s, id: %s' % (drive_file['title'], drive_file['id']))
             file = self.drive.CreateFile({'id': drive_file['id']})
             file.GetContentFile(drive_file['title'])
             downloaded_files.append(drive_file['title'])

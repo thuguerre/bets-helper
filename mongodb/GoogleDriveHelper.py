@@ -34,9 +34,24 @@ class GoogleDriveHelper:
     def upload_files(self, files: typing.List[str]):
 
         for upload_file in files:
-            gfile = self.drive.CreateFile()
+            file_id = self.get_file_id_by_name(upload_file)
+            
+            if file_id == "":
+                gfile = self.drive.CreateFile()
+            else:
+                gfile = self.drive.CreateFile({'id': file_id})
+
             gfile.SetContentFile(upload_file)
             gfile.Upload()
+
+    def get_file_id_by_name(self, name: str) -> str:
+
+        file_list = self.drive.ListFile({'q': "'root' in parents and trashed=false"}).GetList()
+        for drive_file in file_list:
+            if drive_file['title'] == name:
+                return drive_file['id']
+
+        return ""
 
     def download_files(self, prefix: str = "") -> typing.List[str]:
 

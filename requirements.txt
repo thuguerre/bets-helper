@@ -4,3 +4,5 @@ python-decouple
 gspread
 pymongo
 dnspython
+pydrive
+oauth2client

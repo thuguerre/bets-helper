@@ -1,4 +1,5 @@
 from pymongo import MongoClient
+from bson.json_util import dumps
 import sys
 import os
 
@@ -25,3 +26,17 @@ class BetsMongoDB:
 
     def getLastMatchResultDate(self):
         return self.db.match_results.find().sort("date", -1).limit(1).next().get('date')
+    
+    def dumpDB(self):
+        collection = self.db.match_results
+        cursor = collection.find({})
+        with open('match_results.json', 'w') as file:
+            file.write('[')
+            for document in cursor:
+                file.write(dumps(document))
+                file.write(',')
+            file.write(']')
+        
+        return [
+            'match_results.json'
+        ]

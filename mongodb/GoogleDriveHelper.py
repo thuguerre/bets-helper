@@ -35,3 +35,16 @@ class GoogleDriveHelper:
             gfile = self.drive.CreateFile()
             gfile.SetContentFile(upload_file)
             gfile.Upload()
+
+    def download_files(self):
+
+        downloaded_files = []
+
+        file_list = self.drive.ListFile({'q': "'root' in parents and trashed=false"}).GetList()
+        for drive_file in file_list:
+            print('title: %s, id: %s' % (drive_file['title'], drive_file['id']))
+            file = self.drive.CreateFile({'id': drive_file['id']})
+            file.GetContentFile(drive_file['title'])
+            downloaded_files.append(drive_file['title'])
+
+        return downloaded_files

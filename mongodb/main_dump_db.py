@@ -7,13 +7,28 @@ from GoogleDriveHelper import GoogleDriveHelper
 
 
 #
+# Documentation Printing Method
+#
+def printDocumentation():
+
+    print("")
+    print("args 'local_exec' to load required environment variables. Must be first argument, to let others working.")
+    print("args 'delete_local_files:yes' to delete locally-dumped files after their upload to GDrive.")
+    print("args 'delete_remote_files:yes' to delete GDrive BEFORE new upload. Please use carefully.")
+    print("")
+    print("Typical use:")
+    print("  python3 main_dump_db.py delete_local_files:yes delete_remote_files:yes")
+    print("")
+
+#
 # Main Function
 #
 if __name__ == '__main__':
 
     logging.getLogger().setLevel(logging.INFO)
 
-    delete_files = False
+    delete_local_files = False
+    delete_remote_files = False
 
     # loading script arguments
     for args in sys.argv:
@@ -21,8 +36,15 @@ if __name__ == '__main__':
         if args == "local_exec":
             LocalExecHelper()
         
-        elif args == "delete_files:yes":
-            delete_files = True
+        elif args == "delete_local_files:yes":
+            delete_local_files = True
+
+        elif args == "delete_remote_files:yes":
+            delete_remote_files = True
+        
+        elif args == '-h' or args == "-help" or args == "--h" or args == "--help":
+            printDocumentation()
+            sys.exit()
 
     # dumping MongoDB to files
     logging.info("dumping mongodb...")
@@ -32,11 +54,16 @@ if __name__ == '__main__':
 
     # uploading dumped files to Google Drive
     drive = GoogleDriveHelper()
+
+    if delete_remote_files:
+        logging.debug("deleting files from GDrive")
+        drive.delete_files()
+
     drive.upload_files(files)
     logging.info("files uploaded to GDrive")
     
     # deleting files if asked
-    if delete_files:
+    if delete_local_files:
         for delete_file in files:
             os.remove(delete_file)
 

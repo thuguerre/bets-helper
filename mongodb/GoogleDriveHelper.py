@@ -48,3 +48,10 @@ class GoogleDriveHelper:
             downloaded_files.append(drive_file['title'])
 
         return downloaded_files
+
+    def delete_files(self):
+
+        file_list = self.drive.ListFile({'q': "'root' in parents and trashed=false"}).GetList()
+        for drive_file in file_list:
+            file = self.drive.CreateFile({'id': drive_file['id']})
+            file.Trash()

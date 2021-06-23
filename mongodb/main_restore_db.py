@@ -13,7 +13,7 @@ if __name__ == '__main__':
 
     logging.getLogger().setLevel(logging.INFO)
 
-    delete_files = False
+    delete_local_files = False
 
     # loading script arguments
     for args in sys.argv:
@@ -21,15 +21,15 @@ if __name__ == '__main__':
         if args == "local_exec":
             LocalExecHelper()
         
-        elif args == "delete_files:yes":
-            delete_files = True
+        elif args == "delete_local_files:yes":
+            delete_local_files = True
 
     # downloading files from GDrive
     drive = GoogleDriveHelper()
     download_files = drive.download_files(os.environ["MONGODB_NAME"])
     
     # deleting files if asked
-    if delete_files:
+    if delete_local_files:
         for delete_file in download_files:
             os.remove(delete_file)
 

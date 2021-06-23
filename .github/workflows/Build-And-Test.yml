@@ -50,5 +50,8 @@ jobs:
           SA_CLIENT_EMAIL: ${{ secrets.SA_CLIENT_EMAIL }}
           SA_CLIENT_ID: ${{ secrets.SA_CLIENT_ID }}
           SA_CLIENT_X509_CERT_URL: ${{ secrets.SA_CLIENT_X509_CERT_URL }}
+          MONGODB_USER: ${{ secrets.MONGODB_USER }}
+          MONGODB_PWD: ${{ secrets.MONGODB_PWD }}
+          MONGODB_NAME: ${{ secrets.MONGODB_NAME }}
       run: |
         python main.py upload_spreadsheet:no upload_mongodb:no

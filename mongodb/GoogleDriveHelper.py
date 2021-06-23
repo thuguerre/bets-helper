@@ -10,7 +10,7 @@ class GoogleDriveHelper:
     drive = None
 
     def __init__(self):
-        
+
         # use creds to create a client to interact with the Google Drive API
         credentials = {
             "type": "service_account",
@@ -38,15 +38,16 @@ class GoogleDriveHelper:
             gfile.SetContentFile(upload_file)
             gfile.Upload()
 
-    def download_files(self) -> typing.List[str]:
+    def download_files(self, prefix: str = "") -> typing.List[str]:
 
         downloaded_files = []
 
         file_list = self.drive.ListFile({'q': "'root' in parents and trashed=false"}).GetList()
         for drive_file in file_list:
-            file = self.drive.CreateFile({'id': drive_file['id']})
-            file.GetContentFile(drive_file['title'])
-            downloaded_files.append(drive_file['title'])
+            if drive_file['title'].startswith(prefix):
+                file = self.drive.CreateFile({'id': drive_file['id']})
+                file.GetContentFile(drive_file['title'])
+                downloaded_files.append(drive_file['title'])
 
         return downloaded_files
 

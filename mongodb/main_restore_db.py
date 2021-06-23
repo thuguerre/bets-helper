@@ -26,7 +26,7 @@ if __name__ == '__main__':
 
     # downloading files from GDrive
     drive = GoogleDriveHelper()
-    download_files = drive.download_files()
+    download_files = drive.download_files(os.environ["MONGODB_NAME"])
     
     # deleting files if asked
     if delete_files:

@@ -35,7 +35,7 @@ class GoogleDriveHelper:
 
         for upload_file in files:
             file_id = self.get_file_id_by_name(upload_file)
-            
+
             if file_id == "":
                 gfile = self.drive.CreateFile()
             else:
@@ -73,3 +73,9 @@ class GoogleDriveHelper:
             if drive_file['title'].startswith(prefix):
                 file = self.drive.CreateFile({'id': drive_file['id']})
                 file.Trash()
+
+    def list_files(self):
+
+        file_list = self.drive.ListFile({'q': "'root' in parents and trashed=false"}).GetList()
+        for drive_file in file_list:
+            print(drive_file['title'])

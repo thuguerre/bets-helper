@@ -51,9 +51,10 @@ class GoogleDriveHelper:
 
         return downloaded_files
 
-    def delete_files(self):
+    def delete_files(self, prefix: str = ""):
 
         file_list = self.drive.ListFile({'q': "'root' in parents and trashed=false"}).GetList()
         for drive_file in file_list:
-            file = self.drive.CreateFile({'id': drive_file['id']})
-            file.Trash()
+            if drive_file['title'].startswith(prefix):
+                file = self.drive.CreateFile({'id': drive_file['id']})
+                file.Trash()

@@ -57,7 +57,7 @@ if __name__ == '__main__':
 
     if delete_remote_files:
         logging.debug("deleting files from GDrive")
-        drive.delete_files()
+        drive.delete_files(os.environ["MONGODB_NAME"])
 
     drive.upload_files(files)
     logging.info("files uploaded to GDrive")

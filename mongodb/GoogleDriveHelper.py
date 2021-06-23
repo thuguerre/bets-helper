@@ -10,6 +10,7 @@ class GoogleDriveHelper:
     drive = None
 
     def __init__(self):
+        
         # use creds to create a client to interact with the Google Drive API
         credentials = {
             "type": "service_account",
@@ -30,7 +31,7 @@ class GoogleDriveHelper:
         gauth.credentials = ServiceAccountCredentials.from_json_keyfile_dict(credentials, scope)
         self.drive = GoogleDrive(gauth)
 
-    def upload_files(self, files):
+    def upload_files(self, files: typing.List[str]):
 
         for upload_file in files:
             gfile = self.drive.CreateFile()

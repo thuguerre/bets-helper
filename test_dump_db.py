@@ -4,6 +4,9 @@ import os
 from pathlib import Path
 from mongodb.GoogleDriveHelper import GoogleDriveHelper
 from LocalExecHelper import LocalExecHelper
+from datetime import datetime
+import glob
+
 
 BACKUP_FOLDER_NAME = "./backup/"
 
@@ -54,6 +57,21 @@ class TestDumpDB(unittest.TestCase):
     def __prepare_drive_folder(self):
         self.drive.delete_files(os.environ["MONGODB_NAME"])
 
+    def __test_exist_backup_file(self):
+        now = datetime.now()
+        self.assertEqual(
+            len(
+                glob.glob(
+                    BACKUP_FOLDER_NAME
+                    + os.environ["MONGODB_NAME"]
+                    + '.match_results.'
+                    + now.strftime("%Y%m%d%H%M")
+                    + '*.json')
+                ),
+            1
+        )
+
+
     @pytest.mark.unittest
     def test_backup_file_generated(self):
         
@@ -61,5 +79,5 @@ class TestDumpDB(unittest.TestCase):
         os.system("python3 ./mongodb/main_dump_db.py upload_to_gdrive:no delete_local_files:no")
 
         self.__test_number_files_in_backup_folder(1)
-        # TODO testing local name file
+        self.__test_exist_backup_file()
         self.__test_is_gdrive_folder_empty()

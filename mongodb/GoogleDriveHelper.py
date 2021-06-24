@@ -74,6 +74,9 @@ class GoogleDriveHelper:
                 file = self.drive.CreateFile({'id': drive_file['id']})
                 file.Trash()
 
+    def delete_all_files(self):
+        self.delete_files("")
+
     def list_files(self):
 
         file_list = self.drive.ListFile({'q': "'root' in parents and trashed=false"}).GetList()

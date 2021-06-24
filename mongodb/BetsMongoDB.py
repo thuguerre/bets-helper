@@ -31,10 +31,10 @@ class BetsMongoDB:
     
     def dumpDB(self, backup_folder_name: str = ""):
         files = []
-        files.append(self.dumpCollection(self.db.match_results, backup_folder_name))
+        files.append(self.__dumpCollection(self.db.match_results, backup_folder_name))
         return files
 
-    def dumpCollection(self, collection, backup_folder_name: str = "") -> str:
+    def __dumpCollection(self, collection, backup_folder_name: str = "") -> str:
 
         if not(backup_folder_name == ""):
             # creating BACKUP folder if it does not exists

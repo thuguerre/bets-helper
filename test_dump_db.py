@@ -132,16 +132,16 @@ class TestDumpDB(unittest.TestCase):
     def test_content_backup_file(self):
         
         # preparing random match result to insert in db, so in dump
-        date = '1900-' + str(random.randint(0, 99)) + '-' + str(random.randint(0,99))
-        sport = 'test_content_backup_file_sport' + str(random.randint(0,99))
-        country = 'test_content_backup_file_country' + str(random.randint(0,99))
-        league = 'test_content_backup_file_league' + str(random.randint(0,99))
-        home_team = 'test_content_backup_file_home_team' + str(random.randint(0,99))
-        home_score = str(random.randint(0,99))
-        visitor_team = 'test_content_backup_file_visitor_team' + str(random.randint(0,99))
-        visitor_score = str(random.randint(0,99))
-
-        match_result = MatchResult(date, sport, country, league, home_team, home_score, visitor_team, visitor_score)
+        match_result = MatchResult(
+            '1900-' + str(random.randint(0, 99)) + '-' + str(random.randint(0,99)),
+            'test_content_backup_file_sport' + str(random.randint(0,99)),
+            'test_content_backup_file_country' + str(random.randint(0,99)),
+            'test_content_backup_file_league' + str(random.randint(0,99)),
+            'test_content_backup_file_home_team' + str(random.randint(0,99)),
+            str(random.randint(0,99)),
+            'test_content_backup_file_visitor_team' + str(random.randint(0,99)),
+            str(random.randint(0,99))
+        )
 
         mongodb = BetsMongoDB()
         mongodb.insertMatchResult(match_result)

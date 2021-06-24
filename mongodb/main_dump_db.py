@@ -13,9 +13,8 @@ def printDocumentation():
 
     print("")
     print("args 'local_exec' to load required environment variables. Must be first argument, to let others working.")
-    print("args 'upload_to_gdrive:yes' to upload files to GDrive. No by default!")
+    print("args 'upload_to_gdrive:yes|no' to upload files to GDrive. Yes by default.")
     print("args 'delete_local_files:yes' to delete locally-dumped files after their upload to GDrive.")
-    print("args 'delete_remote_files:yes' to delete GDrive BEFORE new upload. Please use carefully.")
     print("")
     print("Typical use:")
     print("  python3 main_dump_db.py upload_to_gdrive:yes delete_local_files:yes delete_remote_files:yes")
@@ -28,7 +27,7 @@ if __name__ == '__main__':
 
     logging.getLogger().setLevel(logging.INFO)
 
-    upload_to_gdrive = False
+    upload_to_gdrive = True
     delete_local_files = False
     delete_remote_files = False
 
@@ -43,6 +42,9 @@ if __name__ == '__main__':
         
         elif args == "upload_to_gdrive:yes":
             upload_to_gdrive = True
+
+        elif args == "upload_to_gdrive:no":
+            upload_to_gdrive = False
 
         elif args == "delete_remote_files:yes":
             delete_remote_files = True
@@ -60,10 +62,6 @@ if __name__ == '__main__':
     # uploading dumped files to Google Drive
     if upload_to_gdrive:
         drive = GoogleDriveHelper()
-
-        if delete_remote_files:
-            logging.debug("deleting files from GDrive")
-            drive.delete_files(os.environ["MONGODB_NAME"])
 
         drive.upload_files(files)
         logging.info("files uploaded to GDrive")

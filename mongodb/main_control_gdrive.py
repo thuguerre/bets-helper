@@ -12,6 +12,7 @@ def printDocumentation():
 
     print("")
     print("args 'action:list_files' to print all non trashed files on remote GDrive.")
+    print("args 'action:delete_test_files' to move to trash all files on remote GDrive.")
     print("args 'action:delete_all_files' to move to trash all files on remote GDrive.")
     print("")
 
@@ -26,6 +27,7 @@ if __name__ == '__main__':
 
     list_files = False
     delete_all_files = False
+    delete_test_files = False
 
     # loading script arguments
     for args in sys.argv:
@@ -35,6 +37,9 @@ if __name__ == '__main__':
         
         elif args == "action:delete_all_files":
             delete_all_files = True
+
+        elif args == "action:delete_test_files":
+            delete_test_files = True
 
         elif args == '-h' or args == "-help" or args == "--h" or args == "--help":
             printDocumentation()
@@ -49,4 +54,9 @@ if __name__ == '__main__':
     if delete_all_files:
         drive.delete_all_files()
         print("files deleted")
+        print("----")
+
+    if delete_test_files:
+        drive.delete_files("bets_test_db")
+        print("test files deleted")
         print("----")

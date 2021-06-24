@@ -17,6 +17,7 @@ BACKUP_FOLDER_NAME = "./backup/"
 class TestDumpDB(unittest.TestCase):
 
     drive = None
+    mongodb_name = None
 
     def setUp(self):
         
@@ -24,6 +25,8 @@ class TestDumpDB(unittest.TestCase):
             os.environ["MONGODB_NAME"]
         except KeyError:
             LocalExecHelper()
+
+        self.mongodb_name = os.environ["MONGODB_NAME"]
 
         self.__prepare_backup_folder()
         self.__test_is_backup_folder_empty()
@@ -44,10 +47,10 @@ class TestDumpDB(unittest.TestCase):
         self.assertEqual(len(os.listdir(BACKUP_FOLDER_NAME)), number_of_files)
 
     def __test_is_gdrive_folder_empty(self):
-        self.assertEqual(self.drive.count_files(os.environ["MONGODB_NAME"]), 0)
+        self.assertEqual(self.drive.count_files(self.mongodb_name), 0)
     
     def __test_number_files_in_gdrive_folder(self, number_of_files: int):
-        self.assertEqual(self.drive.count_files(os.environ["MONGODB_NAME"]), 1)
+        self.assertEqual(self.drive.count_files(self.mongodb_name), 1)
 
     def __prepare_backup_folder(self):
 
@@ -62,7 +65,7 @@ class TestDumpDB(unittest.TestCase):
         os.rmdir(BACKUP_FOLDER_NAME)
 
     def __prepare_drive_folder(self):
-        self.drive.delete_files(os.environ["MONGODB_NAME"])
+        self.drive.delete_files(self.mongodb_name)
 
     def __test_exist_backup_file_in_backup_folder(self, collection_name: str):
         self.assertEqual(len(glob.glob(BACKUP_FOLDER_NAME + self.__get_dump_filename_glob(collection_name))), 1)
@@ -70,7 +73,7 @@ class TestDumpDB(unittest.TestCase):
     def __test_exist_backup_file_in_gdrive_folder(self, collection_name: str):
         file_found = False
         regex = re.compile(self.__get_dump_filename_pattern(collection_name))
-        drive_files = self.drive.list_files(os.environ["MONGODB_NAME"])
+        drive_files = self.drive.list_files(self.mongodb_name)
         for drive_file in drive_files:
             if regex.match(drive_file):
                 file_found = True
@@ -80,7 +83,7 @@ class TestDumpDB(unittest.TestCase):
         return self.__get_dump_filename_glob(collection_name).replace("*", "[0-9]{6}")
 
     def __get_dump_filename_glob(self, collection_name: str):
-        return os.environ["MONGODB_NAME"] + '.' + collection_name + '.' + datetime.now().strftime("%Y%m%d") + '*.json'
+        return self.mongodb_name + '.' + collection_name + '.' + datetime.now().strftime("%Y%m%d") + '*.json'
 
     @pytest.mark.unittest
     def test_backup_file_is_generated(self):

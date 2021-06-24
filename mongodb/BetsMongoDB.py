@@ -36,13 +36,17 @@ class BetsMongoDB:
     def dumpCollection(self, collection) -> str:
 
         logging.debug("dumping collection '" + collection.full_name + "'")
+        dump_filename = self.__define_dump_filename(collection)
 
         cursor = collection.find({})
-        with open(collection.full_name + '.json', 'w') as file:
+        with open(dump_filename, 'w') as file:
             file.write('[')
             for document in cursor:
                 file.write(dumps(document))
-                file.write(',')
+                file.write(',\n')
             file.write(']')
 
+        return dump_filename
+
+    def __define_dump_filename(self, collection) -> str:
         return collection.full_name + '.json'

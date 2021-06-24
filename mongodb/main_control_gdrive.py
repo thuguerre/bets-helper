@@ -6,6 +6,16 @@ from LocalExecHelper import LocalExecHelper
 
 
 #
+# Documentation Printing Method
+#
+def printDocumentation():
+
+    print("")
+    print("args 'action:list_files' to print all non trashed files on remote GDrive.")
+    print("args 'action:delete_all_files' to move to trash all files on remote GDrive.")
+    print("")
+
+#
 # Main Function
 #
 if __name__ == '__main__':
@@ -25,6 +35,10 @@ if __name__ == '__main__':
         
         elif args == "action:delete_all_files":
             delete_all_files = True
+
+        elif args == '-h' or args == "-help" or args == "--h" or args == "--help":
+            printDocumentation()
+            sys.exit()
 
     drive = GoogleDriveHelper()
 

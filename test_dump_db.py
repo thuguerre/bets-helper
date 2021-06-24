@@ -90,7 +90,6 @@ class TestDumpDB(unittest.TestCase):
     @pytest.mark.unittest
     def test_backup_file_is_generated(self):
         
-        # dumping a file, without uploading it and deleting it
         os.system("python3 ./mongodb/main_dump_db.py upload_to_gdrive:no delete_local_files:no")
 
         self.__test_number_files_in_backup_folder(1)
@@ -101,7 +100,6 @@ class TestDumpDB(unittest.TestCase):
     @pytest.mark.unittest
     def test_backup_file_is_generated_and_locally_deleted(self):
         
-        # dumping a file, without uploading it and deleting it
         os.system("python3 ./mongodb/main_dump_db.py upload_to_gdrive:no delete_local_files:yes")
 
         self.__test_is_backup_folder_empty()
@@ -110,7 +108,6 @@ class TestDumpDB(unittest.TestCase):
     @pytest.mark.unittest
     def test_backup_file_is_uploaded(self):
         
-        # dumping a file, without uploading it and deleting it
         os.system("python3 ./mongodb/main_dump_db.py upload_to_gdrive:yes delete_local_files:no")
 
         self.__test_number_files_in_backup_folder(1)
@@ -120,9 +117,8 @@ class TestDumpDB(unittest.TestCase):
         self.__test_exist_backup_file_in_gdrive_folder('match_results')
 
     @pytest.mark.unittest
-    def test_backup_file_is_uploaded_and_locally_delete(self):
+    def test_backup_file_is_uploaded_and_locally_deleted(self):
         
-        # dumping a file, without uploading it and deleting it
         os.system("python3 ./mongodb/main_dump_db.py upload_to_gdrive:yes delete_local_files:yes")
 
         self.__test_is_backup_folder_empty()

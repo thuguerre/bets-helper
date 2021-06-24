@@ -16,10 +16,10 @@ def printDocumentation():
     print("")
     print("args 'local_exec' to load required environment variables. Must be first argument, to let others working.")
     print("args 'upload_to_gdrive:yes|no' to upload files to GDrive. Yes by default.")
-    print("args 'delete_local_files:yes' to delete locally-dumped files after their upload to GDrive.")
+    print("args 'delete_local_files:yes|no' to delete locally-dumped files after their upload to GDrive.")
     print("")
     print("Typical use:")
-    print("  python3 main_dump_db.py upload_to_gdrive:yes delete_local_files:yes delete_remote_files:yes")
+    print("  python3 main_dump_db.py upload_to_gdrive:yes delete_local_files:yes")
     print("")
 
 #
@@ -41,15 +41,15 @@ if __name__ == '__main__':
         
         elif args == "delete_local_files:yes":
             delete_local_files = True
+
+        elif args == "delete_local_files:no":
+            delete_local_files = False
         
         elif args == "upload_to_gdrive:yes":
             upload_to_gdrive = True
 
         elif args == "upload_to_gdrive:no":
             upload_to_gdrive = False
-
-        elif args == "delete_remote_files:yes":
-            delete_remote_files = True
         
         elif args == '-h' or args == "-help" or args == "--h" or args == "--help":
             printDocumentation()

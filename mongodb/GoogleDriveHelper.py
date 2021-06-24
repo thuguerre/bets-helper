@@ -68,8 +68,19 @@ class GoogleDriveHelper:
     def delete_all_files(self):
         self.delete_files("")
 
-    def list_files(self):
+    def list_files(self, prefix: str = ""):
 
         file_list = self.drive.ListFile({'q': "'root' in parents and trashed=false"}).GetList()
         for drive_file in file_list:
-            print(drive_file['title'])
+            if drive_file['title'].startswith(prefix):
+                print(drive_file['title'])
+
+    def count_files(self, prefix: str = "") -> int:
+
+        count = 0
+        file_list = self.drive.ListFile({'q': "'root' in parents and trashed=false"}).GetList()
+        for drive_file in file_list:
+            if drive_file['title'].startswith(prefix):
+                count = count + 1
+
+        return count

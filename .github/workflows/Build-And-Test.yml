@@ -14,6 +14,16 @@ on:
   
 jobs:
   build:
+    env:
+      SA_PROJECT_ID: ${{ secrets.SA_PROJECT_ID }}
+      SA_PRIVATE_KEY_ID: ${{ secrets.SA_PRIVATE_KEY_ID }}
+      SA_PRIVATE_KEY: ${{ secrets.SA_PRIVATE_KEY }}
+      SA_CLIENT_EMAIL: ${{ secrets.SA_CLIENT_EMAIL }}
+      SA_CLIENT_ID: ${{ secrets.SA_CLIENT_ID }}
+      SA_CLIENT_X509_CERT_URL: ${{ secrets.SA_CLIENT_X509_CERT_URL }}
+      MONGODB_USER: ${{ secrets.MONGODB_USER }}
+      MONGODB_PWD: ${{ secrets.MONGODB_PWD }}
+      MONGODB_NAME: ${{ secrets.MONGODB_NAME_TEST }}
 
     runs-on: ubuntu-latest
     strategy:
@@ -31,7 +41,6 @@ jobs:
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        python -m pip install flake8 pytest requests gspread oauth2client python-decouple pymongo dnspython
         if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
 
     - name: Lint with flake8
@@ -41,17 +50,11 @@ jobs:
         # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
         flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
 
+    - name: Test with pytest
+      run: |
+        pytest
+
     - name: Execute
       id: execute
-      env:
-          SA_PROJECT_ID: ${{ secrets.SA_PROJECT_ID }}
-          SA_PRIVATE_KEY_ID: ${{ secrets.SA_PRIVATE_KEY_ID }}
-          SA_PRIVATE_KEY: ${{ secrets.SA_PRIVATE_KEY }}
-          SA_CLIENT_EMAIL: ${{ secrets.SA_CLIENT_EMAIL }}
-          SA_CLIENT_ID: ${{ secrets.SA_CLIENT_ID }}
-          SA_CLIENT_X509_CERT_URL: ${{ secrets.SA_CLIENT_X509_CERT_URL }}
-          MONGODB_USER: ${{ secrets.MONGODB_USER }}
-          MONGODB_PWD: ${{ secrets.MONGODB_PWD }}
-          MONGODB_NAME: ${{ secrets.MONGODB_NAME }}
       run: |
         python main.py upload_spreadsheet:no upload_mongodb:no

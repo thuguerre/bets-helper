@@ -30,3 +30,15 @@ class MatchResult:
             "visitor_team": self.visitor_team,
             "visitor_score": self.visitor_score
         }
+
+    def toMongoDBDataFragment(self) -> str:
+        return (
+            "\"date\": \"" + self.date + "\""
+            + ", \"sport\": \"" + self.sport + "\""
+            + ", \"country\": \"" + self.country + "\""
+            + ", \"league\": \"" + self.league + "\""
+            + ", \"home_team\": \"" + self.home_team + "\""
+            + ", \"home_score\": \"" + self.home_score + "\""
+            + ", \"visitor_team\": \"" + self.visitor_team + "\""
+            + ", \"visitor_score\": \"" + self.visitor_score + "\""
+        )

@@ -65,29 +65,22 @@ class TestDumpDB(unittest.TestCase):
         self.drive.delete_files(os.environ["MONGODB_NAME"])
 
     def __test_exist_backup_file_in_backup_folder(self, collection_name: str):
-        now = datetime.now()
-        self.assertEqual(
-            len(
-                glob.glob(
-                    BACKUP_FOLDER_NAME
-                    + os.environ["MONGODB_NAME"]
-                    + '.'
-                    + collection_name
-                    + '.'
-                    + now.strftime("%Y%m%d")
-                    + '*.json')
-                ),
-            1
-        )
+        self.assertEqual(len(glob.glob(BACKUP_FOLDER_NAME + self.__get_dump_filename_glob(collection_name))), 1)
 
     def __test_exist_backup_file_in_gdrive_folder(self, collection_name: str):
         file_found = False
-        regex = re.compile(os.environ["MONGODB_NAME"] + '.' + collection_name + '.' + datetime.now().strftime("%Y%m%d%H%M") + '[0-9]{2}.json')
+        regex = re.compile(self.__get_dump_filename_pattern(collection_name))
         drive_files = self.drive.list_files(os.environ["MONGODB_NAME"])
         for drive_file in drive_files:
             if regex.match(drive_file):
                 file_found = True
-        self.assertTrue(file_found)    
+        self.assertTrue(file_found)
+
+    def __get_dump_filename_pattern(self, collection_name: str):
+        return self.__get_dump_filename_glob(collection_name).replace("*", "[0-9]{6}")
+
+    def __get_dump_filename_glob(self, collection_name: str):
+        return os.environ["MONGODB_NAME"] + '.' + collection_name + '.' + datetime.now().strftime("%Y%m%d") + '*.json'
 
     @pytest.mark.unittest
     def test_backup_file_is_generated(self):
@@ -154,7 +147,7 @@ class TestDumpDB(unittest.TestCase):
         self.__test_exist_backup_file_in_backup_folder('match_results')
 
         # testing the presence of the match result in the dump
-        match_results_backup_filename = glob.glob(BACKUP_FOLDER_NAME + os.environ["MONGODB_NAME"] + '.match_results.' + datetime.now().strftime("%Y%m%d") + '*.json')[0]
+        match_results_backup_filename = glob.glob(BACKUP_FOLDER_NAME + self.__get_dump_filename_glob('match_results'))[0]
         with open(match_results_backup_filename) as match_results_backup_file:
             self.assertTrue(match_result.toMongoDBDataFragment() in match_results_backup_file.read())
 

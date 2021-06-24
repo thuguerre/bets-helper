@@ -23,7 +23,7 @@ jobs:
       SA_CLIENT_X509_CERT_URL: ${{ secrets.SA_CLIENT_X509_CERT_URL }}
       MONGODB_USER: ${{ secrets.MONGODB_USER }}
       MONGODB_PWD: ${{ secrets.MONGODB_PWD }}
-      MONGODB_NAME: ${{ secrets.MONGODB_NAME }}
+      MONGODB_NAME: ${{ secrets.MONGODB_NAME_TEST }}
 
     runs-on: ubuntu-latest
     strategy:

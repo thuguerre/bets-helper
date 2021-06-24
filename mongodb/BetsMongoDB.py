@@ -1,5 +1,6 @@
 from pymongo import MongoClient
 from bson.json_util import dumps
+from datetime import datetime
 import sys
 import os
 import logging
@@ -49,4 +50,8 @@ class BetsMongoDB:
         return dump_filename
 
     def __define_dump_filename(self, collection) -> str:
-        return collection.full_name + '.json'
+
+        now = datetime.now()
+        suffix = now.strftime("%Y%m%d%H%M%S")
+
+        return collection.full_name + '.' + suffix + '.json'

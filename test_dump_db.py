@@ -3,10 +3,13 @@ import unittest
 import os
 from pathlib import Path
 from mongodb.GoogleDriveHelper import GoogleDriveHelper
+from mongodb.BetsMongoDB import BetsMongoDB
+from betsmodels import MatchResult
 from LocalExecHelper import LocalExecHelper
 from datetime import datetime
 import glob
 import re
+import random
 
 
 BACKUP_FOLDER_NAME = "./backup/"
@@ -71,7 +74,7 @@ class TestDumpDB(unittest.TestCase):
                     + '.'
                     + collection_name
                     + '.'
-                    + now.strftime("%Y%m%d%H%M")
+                    + now.strftime("%Y%m%d")
                     + '*.json')
                 ),
             1
@@ -79,8 +82,7 @@ class TestDumpDB(unittest.TestCase):
 
     def __test_exist_backup_file_in_gdrive_folder(self, collection_name: str):
         file_found = False
-        now = datetime.now()
-        regex = re.compile(os.environ["MONGODB_NAME"] + '.' + collection_name + '.' + now.strftime("%Y%m%d%H%M") + '[0-9]{2}.json')
+        regex = re.compile(os.environ["MONGODB_NAME"] + '.' + collection_name + '.' + datetime.now().strftime("%Y%m%d%H%M") + '[0-9]{2}.json')
         drive_files = self.drive.list_files(os.environ["MONGODB_NAME"])
         for drive_file in drive_files:
             if regex.match(drive_file):
@@ -125,3 +127,36 @@ class TestDumpDB(unittest.TestCase):
 
         self.__test_number_files_in_gdrive_folder(1)
         self.__test_exist_backup_file_in_gdrive_folder('match_results')
+
+    @pytest.mark.unittest
+    def test_content_backup_file(self):
+        
+        # preparing random match result to insert in db, so in dump
+        date = '1900-' + str(random.randint(0, 99)) + '-' + str(random.randint(0,99))
+        sport = 'test_content_backup_file_sport' + str(random.randint(0,99))
+        country = 'test_content_backup_file_country' + str(random.randint(0,99))
+        league = 'test_content_backup_file_league' + str(random.randint(0,99))
+        home_team = 'test_content_backup_file_home_team' + str(random.randint(0,99))
+        home_score = str(random.randint(0,99))
+        visitor_team = 'test_content_backup_file_visitor_team' + str(random.randint(0,99))
+        visitor_score = str(random.randint(0,99))
+
+        match_result = MatchResult(date, sport, country, league, home_team, home_score, visitor_team, visitor_score)
+
+        mongodb = BetsMongoDB()
+        mongodb.insertMatchResult(match_result)
+
+        # dumping the mongo db
+        os.system("python3 ./mongodb/main_dump_db.py upload_to_gdrive:no delete_local_files:no")
+
+        # testing the dump files are here
+        self.__test_number_files_in_backup_folder(1)
+        self.__test_exist_backup_file_in_backup_folder('match_results')
+
+        # testing the presence of the match result in the dump
+        match_results_backup_filename = glob.glob(BACKUP_FOLDER_NAME + os.environ["MONGODB_NAME"] + '.match_results.' + datetime.now().strftime("%Y%m%d") + '*.json')[0]
+        with open(match_results_backup_filename) as match_results_backup_file:
+            self.assertTrue(match_result.toMongoDBDataFragment() in match_results_backup_file.read())
+
+        # testing no file has been uploaded to Google Drive
+        self.__test_is_gdrive_folder_empty()

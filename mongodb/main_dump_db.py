@@ -6,6 +6,8 @@ import os
 from GoogleDriveHelper import GoogleDriveHelper
 
 
+BACKUP_FOLDER_NAME = "./backup/"
+
 #
 # Documentation Printing Method
 #
@@ -56,19 +58,19 @@ if __name__ == '__main__':
     # dumping MongoDB to files
     logging.info("dumping mongodb...")
     mongodb = BetsMongoDB()
-    files = mongodb.dumpDB()
+    files = mongodb.dumpDB(BACKUP_FOLDER_NAME)
     logging.info("dumped.")
 
     # uploading dumped files to Google Drive
     if upload_to_gdrive:
         drive = GoogleDriveHelper()
 
-        drive.upload_files(files)
+        drive.upload_files(files, BACKUP_FOLDER_NAME)
         logging.info("files uploaded to GDrive")
     
     # deleting files if asked
     if delete_local_files:
         for delete_file in files:
-            os.remove(delete_file)
+            os.remove(BACKUP_FOLDER_NAME + delete_file)
 
         logging.info("files deleted")

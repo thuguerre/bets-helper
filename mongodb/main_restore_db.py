@@ -6,6 +6,8 @@ import os
 from GoogleDriveHelper import GoogleDriveHelper
 
 
+BACKUP_FOLDER_NAME = "./backup/"
+
 #
 # Main Function
 #
@@ -26,7 +28,7 @@ if __name__ == '__main__':
 
     # downloading files from GDrive
     drive = GoogleDriveHelper()
-    download_files = drive.download_files(os.environ["MONGODB_NAME"])
+    download_files = drive.download_files(os.environ["MONGODB_NAME"], BACKUP_FOLDER_NAME)
     
     # deleting files if asked
     if delete_local_files:

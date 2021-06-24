@@ -3,7 +3,7 @@ import typing
 from pydrive.auth import GoogleAuth
 from pydrive.drive import GoogleDrive
 from oauth2client.service_account import ServiceAccountCredentials
-
+from pathlib import Path
 
 class GoogleDriveHelper:
 
@@ -31,37 +31,28 @@ class GoogleDriveHelper:
         gauth.credentials = ServiceAccountCredentials.from_json_keyfile_dict(credentials, scope)
         self.drive = GoogleDrive(gauth)
 
-    def upload_files(self, files: typing.List[str]):
+    def upload_files(self, files: typing.List[str], backup_folder_name: str = ""):
 
         for upload_file in files:
-            file_id = self.get_file_id_by_name(upload_file)
-
-            if file_id == "":
-                gfile = self.drive.CreateFile()
-            else:
-                gfile = self.drive.CreateFile({'id': file_id})
-
-            gfile.SetContentFile(upload_file)
+            gfile = self.drive.CreateFile({'title': upload_file})
+            gfile.SetContentFile(backup_folder_name + upload_file)
             gfile.Upload()
 
-    def get_file_id_by_name(self, name: str) -> str:
+    def download_files(self, prefix: str = "", backup_folder_name: str = "") -> typing.List[str]:
 
-        file_list = self.drive.ListFile({'q': "'root' in parents and trashed=false"}).GetList()
-        for drive_file in file_list:
-            if drive_file['title'] == name:
-                return drive_file['id']
-
-        return ""
-
-    def download_files(self, prefix: str = "") -> typing.List[str]:
+        if not(backup_folder_name == ""):
+            # creating BACKUP folder if it does not exists
+            Path(backup_folder_name).mkdir(exist_ok=True)
 
         downloaded_files = []
 
         file_list = self.drive.ListFile({'q': "'root' in parents and trashed=false"}).GetList()
+
         for drive_file in file_list:
+
             if drive_file['title'].startswith(prefix):
                 file = self.drive.CreateFile({'id': drive_file['id']})
-                file.GetContentFile(drive_file['title'])
+                file.GetContentFile(backup_folder_name + drive_file['title'])
                 downloaded_files.append(drive_file['title'])
 
         return downloaded_files

@@ -10,6 +10,7 @@ currentdir = os.path.dirname(os.path.realpath(__file__))
 parentdir = os.path.dirname(currentdir)
 sys.path.append(parentdir)
 from betsmodels import MatchResult
+from betsmodels import Match
 
 class BetsMongoDB:
 
@@ -25,6 +26,9 @@ class BetsMongoDB:
 
     def insertMatchResult(self, match_result: MatchResult):
         return self.db.match_results.insert_one(match_result.toJSON())
+
+    def insertMatch(self, match: Match):
+        return self.db.matches.insert_one(match.toJSON())
 
     def getLastMatchResultDate(self):
         return self.db.match_results.find().sort("date", -1).limit(1).next().get('date')

@@ -9,5 +9,5 @@ if __name__ == '__main__':
     logging.getLogger().setLevel(logging.INFO)
 
     crawler = WinamaxCrawler()
-    crawler.test()
+    crawler.retrieve_odds()
 

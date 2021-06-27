@@ -3,9 +3,27 @@ import requests
 import re
 from urllib3 import poolmanager
 import json
+from datetime import datetime
+import os
+import sys
 
+currentdir = os.path.dirname(os.path.realpath(__file__))
+parentdir = os.path.dirname(currentdir)
+sys.path.append(parentdir)
+from betsmodels import Match
+from betsmodels import Odd
+from betsmodels import Sport
+from betsmodels import Country
+from betsmodels import OddStatus
+from betsmodels import OddType
+from betsmodels import Bookmaker
+
+from mongodb.BetsMongoDB import BetsMongoDB
+from LocalExecHelper import LocalExecHelper
 
 URL_BASEBALL_JAPAN_HOMEPAGE = "https://www.winamax.fr/paris-sportifs/sports/3/211"
+WINAMAX_SPORT_ID_BASEBALL = 3   # normally 3
+WINAMAX_SPORT_CATEGORY_ID_BASEBALL_JAPAN = 211 # normally 211
 
 # Adapter to prevent SSL Signature error while getting NPB web site content
 # https://github.com/psf/requests/issues/4775
@@ -31,24 +49,13 @@ class ParseException(Exception):
 
 class WinamaxCrawler:
 
-    odds = {}
-
-    def test(self):
+    def retrieve_odds(self):
 
         session = requests.session()
         session.mount('https://', TLSAdapter())
         homepage = session.get(URL_BASEBALL_JAPAN_HOMEPAGE)
 
-        
-
-        #allmatches_regex = re.compile('\"title\":\"[a-zA-Z \-]*\",')
-        #allmatches = allmatches_regex.findall(homepage.text)
-        #for onematch in allmatches:
-        #    print(onematch)
-
         self.__loads_PRELOADED_STATE(homepage.text)
-        self.__loads_odds(homepage.text)
-        # print(self.odds["399024240"])
         
     def __loads_PRELOADED_STATE(self, homepage_text: str):
 
@@ -59,22 +66,33 @@ class WinamaxCrawler:
             raise ParseException
         
         json_raw = allscripts[0].replace("var PRELOADED_STATE = ", "")
-        json_raw = json_raw[0:len(json_raw) - 1]
+        json_raw = json_raw[0:len(json_raw) - 1] # remove last ;
         PRELOADED_STATE = json.loads(json_raw)
 
-        for sportId in PRELOADED_STATE["sportIds"]:
-            print(sportId)
-    
-    def __loads_odds(self, homepage_text: str):
+        for match_id in PRELOADED_STATE["matches"]:
+            match = PRELOADED_STATE["matches"][match_id]
+            if match["sportId"] == WINAMAX_SPORT_ID_BASEBALL and match["categoryId"] == WINAMAX_SPORT_CATEGORY_ID_BASEBALL_JAPAN:
+                
+                retrieved_match = Match(datetime.now(), Sport.BASEBALL, Country.JAPAN, "Regular Season", datetime.fromtimestamp(match["matchStart"]), Bookmaker.WINAMAX, match["matchId"], match["competitor1Name"], match["competitor1Id"], match["competitor2Name"], match["competitor2Id"])
+                
+                if match["status"] == 'PREMATCH':
+                    oddStatus = OddStatus.PREMATCH
+                else:
+                    raise ParseException
 
-        allodds_regex = re.compile('\"odds\":{[0-9\":.,]*},')
-        allodds = allodds_regex.findall(homepage_text)
+                mainBet = PRELOADED_STATE["bets"][str(match["mainBetId"])]
 
-        if len(allodds) != 1:
-            raise ParseException
-        
-        self.odds = json.loads(allodds[0][7:len(allodds[0])-1])
+                odd1 = Odd(datetime.now(), oddStatus, OddType.RESULT, match["competitor1Id"], PRELOADED_STATE["odds"][str(mainBet["outcomes"][0])])
+                odd2 = Odd(datetime.now(), oddStatus, OddType.RESULT, match["competitor2Id"], PRELOADED_STATE["odds"][str(mainBet["outcomes"][1])])
+                
+                retrieved_match.odds.append(odd1)
+                retrieved_match.odds.append(odd2)
 
+                print(retrieved_match.toJSON())
+
+                LocalExecHelper()
+                mongodb = BetsMongoDB()
+                mongodb.insertMatch(retrieved_match)
 
         
 

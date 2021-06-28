@@ -90,7 +90,7 @@ class WinamaxCrawler:
 
                 LocalExecHelper()
                 mongodb = BetsMongoDB()
-                mongodb.insertMatch(retrieved_match)
+                mongodb.insertMatchOrAppendOdds(retrieved_match)
 
         
 

@@ -150,6 +150,7 @@ class Match:
         self.bookmaker_home_team_id = bookmaker_home_team_id
         self.bookmaker_visitor_team_name = bookmaker_visitor_team_name
         self.bookmaker_visitor_team_id = bookmaker_visitor_team_id
+        self.odds = []
 
     def toJSON(self) -> dict:
         result = {

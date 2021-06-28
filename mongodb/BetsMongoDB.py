@@ -27,8 +27,31 @@ class BetsMongoDB:
     def insertMatchResult(self, match_result: MatchResult):
         return self.db.match_results.insert_one(match_result.toJSON())
 
-    def insertMatch(self, match: Match):
-        return self.db.matches.insert_one(match.toJSON())
+    def insertMatchOrAppendOdds(self, match: Match):
+
+        existing_matches = self.db.matches.find({"bookmaker": match.bookmaker, "bookmaker_match_id": match.bookmaker_match_id})
+        existing_matches = list(existing_matches)
+
+        if len(existing_matches) == 0:
+            # no existing match: inserting new one
+            return self.db.matches.insert_one(match.toJSON())
+
+        elif len(existing_matches) == 1:
+            # existing match: appending odds to exiting one
+            for odd in match.odds:          
+                self.db.matches.find_and_modify(
+                    query = {
+                        "bookmaker": match.bookmaker,
+                        "bookmaker_match_id": match.bookmaker_match_id
+                    },
+                    update = {
+                        "$push": { "odds" : odd.toJSON() }
+                    }
+                )
+
+        else:
+            raise Exception
+
 
     def getLastMatchResultDate(self):
         return self.db.match_results.find().sort("date", -1).limit(1).next().get('date')

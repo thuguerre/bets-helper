@@ -99,15 +99,15 @@ class Odd:
 
     timestamp: datetime = None  # timestamp when odd has been retrieved
 
-    odd_status: OddStatus = None
-    odd_type: OddType = None
+    odd_status: str = None
+    odd_type: str = None
     odd_target: str = None
     odd_value: float = None
 
     def __init__(self, timestamp: datetime, odd_status: OddStatus, odd_type: OddType, odd_target: str, odd_value: float):
         self.timestamp = timestamp
-        self.odd_status = odd_status
-        self.odd_type = odd_type
+        self.odd_status = odd_status.name
+        self.odd_type = odd_type.name
         self.odd_target = odd_target
         self.odd_value = odd_value
 
@@ -124,12 +124,12 @@ class Match:
 
     timestamp: datetime = None  # timestamp when this match has been created
     
-    sport: Sport = None
-    country: Country = None
+    sport: str = None
+    country: str = None
     league: str = None
     match_date: datetime = None
 
-    bookmaker: Bookmaker = None
+    bookmaker: str = None
     bookmaker_match_id: str = None
     bookmaker_home_team_name: str = None
     bookmaker_home_team_id: str = None
@@ -140,11 +140,11 @@ class Match:
 
     def __init__(self, timestamp: datetime, sport: Sport, country: Country, league: str, match_date: datetime, bookmaker: Bookmaker, bookmaker_match_id: str, bookmaker_home_team_name: str, bookmaker_home_team_id: str, bookmaker_visitor_team_name: str, bookmaker_visitor_team_id: str):
         self.timestamp = timestamp
-        self.sport = sport
-        self.country = country
+        self.sport = sport.name
+        self.country = country.name
         self.league = league
         self.match_date = match_date
-        self.bookmaker = bookmaker
+        self.bookmaker = bookmaker.name
         self.bookmaker_match_id = bookmaker_match_id
         self.bookmaker_home_team_name = bookmaker_home_team_name
         self.bookmaker_home_team_id = bookmaker_home_team_id
@@ -166,4 +166,6 @@ class Match:
             "bookmaker_visitor_team_id": self.bookmaker_visitor_team_id,
             "odds": []
         }
+        for odd in self.odds:
+            result["odds"].append(odd.toJSON())
         return result

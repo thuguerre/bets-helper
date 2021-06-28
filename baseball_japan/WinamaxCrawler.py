@@ -88,8 +88,6 @@ class WinamaxCrawler:
                 retrieved_match.odds.append(odd1)
                 retrieved_match.odds.append(odd2)
 
-                print(retrieved_match.toJSON())
-
                 LocalExecHelper()
                 mongodb = BetsMongoDB()
                 mongodb.insertMatch(retrieved_match)

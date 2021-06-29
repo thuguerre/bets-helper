@@ -170,3 +170,13 @@ class Match:
         for odd in self.odds:
             result["odds"].append(odd.toJSON())
         return result
+
+    def toMongoDBDataFragment(self) -> str:
+        return (
+            "\"bookmaker\": \"" + self.bookmaker + "\""
+            + ", \"bookmaker_match_id\": \"" + self.bookmaker_match_id + "\""
+            + ", \"bookmaker_home_team_name\": \"" + self.bookmaker_home_team_name + "\""
+            + ", \"bookmaker_home_team_id\": \"" + self.bookmaker_home_team_id + "\""
+            + ", \"bookmaker_visitor_team_name\": \"" + self.bookmaker_visitor_team_name + "\""
+            + ", \"bookmaker_visitor_team_id\": \"" + self.bookmaker_visitor_team_id + "\""
+        )

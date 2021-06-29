@@ -5,6 +5,10 @@ from pathlib import Path
 from mongodb.GoogleDriveHelper import GoogleDriveHelper
 from mongodb.BetsMongoDB import BetsMongoDB
 from betsmodels import MatchResult
+from betsmodels import Match
+from betsmodels import Sport
+from betsmodels import Country
+from betsmodels import Bookmaker
 from LocalExecHelper import LocalExecHelper
 from datetime import datetime
 import glob
@@ -50,7 +54,7 @@ class TestDumpDB(unittest.TestCase):
         self.assertEqual(self.drive.count_files(self.mongodb_name), 0)
     
     def __test_number_files_in_gdrive_folder(self, number_of_files: int):
-        self.assertEqual(self.drive.count_files(self.mongodb_name), 1)
+        self.assertEqual(self.drive.count_files(self.mongodb_name), number_of_files)
 
     def __prepare_backup_folder(self):
 
@@ -90,8 +94,9 @@ class TestDumpDB(unittest.TestCase):
         
         os.system("python3 ./mongodb/main_dump_db.py upload_to_gdrive:no delete_local_files:no")
 
-        self.__test_number_files_in_backup_folder(1)
+        self.__test_number_files_in_backup_folder(2)
         self.__test_exist_backup_file_in_backup_folder('match_results')
+        self.__test_exist_backup_file_in_backup_folder('matches')
 
         self.__test_is_gdrive_folder_empty()
 
@@ -108,11 +113,13 @@ class TestDumpDB(unittest.TestCase):
         
         os.system("python3 ./mongodb/main_dump_db.py upload_to_gdrive:yes delete_local_files:no")
 
-        self.__test_number_files_in_backup_folder(1)
+        self.__test_number_files_in_backup_folder(2)
         self.__test_exist_backup_file_in_backup_folder('match_results')
+        self.__test_exist_backup_file_in_backup_folder('matches')
 
-        self.__test_number_files_in_gdrive_folder(1)
+        self.__test_number_files_in_gdrive_folder(2)
         self.__test_exist_backup_file_in_gdrive_folder('match_results')
+        self.__test_exist_backup_file_in_gdrive_folder('matches')
 
     @pytest.mark.unittest
     def test_backup_file_is_uploaded_and_locally_deleted(self):
@@ -121,8 +128,9 @@ class TestDumpDB(unittest.TestCase):
 
         self.__test_is_backup_folder_empty()
 
-        self.__test_number_files_in_gdrive_folder(1)
+        self.__test_number_files_in_gdrive_folder(2)
         self.__test_exist_backup_file_in_gdrive_folder('match_results')
+        self.__test_exist_backup_file_in_gdrive_folder('matches')
 
     @pytest.mark.unittest
     def test_content_backup_file(self):
@@ -139,20 +147,43 @@ class TestDumpDB(unittest.TestCase):
             str(random.randint(0,99))
         )
 
+        # preparing random match to insert in db, so in dump
+        match = Match(
+            datetime.now(),
+            Sport.BASEBALL,
+            Country.JAPAN,
+            "Regular Season",
+            datetime.now(),
+            Bookmaker.WINAMAX,
+            str(random.randint(0,99)),
+            'test_content_backup_file_home_team' + str(random.randint(0,99)),
+            str(random.randint(0,99)),
+            'test_content_backup_file_visitor_team' + str(random.randint(0,99)),
+            str(random.randint(0,99))
+        )
+
         mongodb = BetsMongoDB()
         mongodb.insertMatchResult(match_result)
+        mongodb.insertMatchOrAppendOdds(match)
 
         # dumping the mongo db
         os.system("python3 ./mongodb/main_dump_db.py upload_to_gdrive:no delete_local_files:no")
 
         # testing the dump files are here
-        self.__test_number_files_in_backup_folder(1)
+        self.__test_number_files_in_backup_folder(2)
         self.__test_exist_backup_file_in_backup_folder('match_results')
+        self.__test_exist_backup_file_in_backup_folder('matches')
 
         # testing the presence of the match result in the dump
         match_results_backup_filename = glob.glob(BACKUP_FOLDER_NAME + self.__get_dump_filename_glob('match_results'))[0]
         with open(match_results_backup_filename) as match_results_backup_file:
             self.assertTrue(match_result.toMongoDBDataFragment() in match_results_backup_file.read())
+
+         # testing the presence of the match in the dump
+        matches_backup_filename = glob.glob(BACKUP_FOLDER_NAME + self.__get_dump_filename_glob('matches'))[0]
+        print(match.toMongoDBDataFragment())
+        with open(matches_backup_filename) as matches_backup_file:
+            self.assertTrue(match.toMongoDBDataFragment() in matches_backup_file.read())
 
         # testing no file has been uploaded to Google Drive
         self.__test_is_gdrive_folder_empty()

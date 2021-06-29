@@ -6,6 +6,8 @@ import json
 from datetime import datetime
 import os
 import sys
+from typing import List
+
 
 currentdir = os.path.dirname(os.path.realpath(__file__))
 parentdir = os.path.dirname(currentdir)
@@ -18,8 +20,6 @@ from betsmodels import OddStatus
 from betsmodels import OddType
 from betsmodels import Bookmaker
 
-from mongodb.BetsMongoDB import BetsMongoDB
-from LocalExecHelper import LocalExecHelper
 
 URL_BASEBALL_JAPAN_HOMEPAGE = "https://www.winamax.fr/paris-sportifs/sports/3/211"
 WINAMAX_SPORT_ID_BASEBALL = 3   # normally 3
@@ -49,15 +49,15 @@ class ParseException(Exception):
 
 class WinamaxCrawler:
 
-    def retrieve_odds(self):
+    def retrieve_odds(self) -> List[Match]:
 
         session = requests.session()
         session.mount('https://', TLSAdapter())
         homepage = session.get(URL_BASEBALL_JAPAN_HOMEPAGE)
 
-        self.__loads_PRELOADED_STATE(homepage.text)
+        return self.__loads_PRELOADED_STATE(homepage.text)
         
-    def __loads_PRELOADED_STATE(self, homepage_text: str):
+    def __loads_PRELOADED_STATE(self, homepage_text: str) -> List[Match]:
 
         allscripts_regex = re.compile('<script type="text/javascript">(.*)</script><script type="text/javascript">var BETTING_CONFIGURATION =')
         allscripts = allscripts_regex.findall(homepage_text)
@@ -68,6 +68,8 @@ class WinamaxCrawler:
         json_raw = allscripts[0].replace("var PRELOADED_STATE = ", "")
         json_raw = json_raw[0:len(json_raw) - 1] # remove last ;
         PRELOADED_STATE = json.loads(json_raw)
+
+        retrieved_matches = []
 
         for match_id in PRELOADED_STATE["matches"]:
             match = PRELOADED_STATE["matches"][match_id]
@@ -88,11 +90,6 @@ class WinamaxCrawler:
                 retrieved_match.odds.append(odd1)
                 retrieved_match.odds.append(odd2)
 
-                LocalExecHelper()
-                mongodb = BetsMongoDB()
-                mongodb.insertMatchOrAppendOdds(retrieved_match)
+                retrieved_matches.append(retrieved_match)
 
-        
-
-        
-
+        return retrieved_matches

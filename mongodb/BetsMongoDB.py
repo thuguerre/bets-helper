@@ -10,6 +10,7 @@ currentdir = os.path.dirname(os.path.realpath(__file__))
 parentdir = os.path.dirname(currentdir)
 sys.path.append(parentdir)
 from betsmodels import MatchResult
+from betsmodels import Match
 
 class BetsMongoDB:
 
@@ -26,12 +27,41 @@ class BetsMongoDB:
     def insertMatchResult(self, match_result: MatchResult):
         return self.db.match_results.insert_one(match_result.toJSON())
 
+    def insertMatchOrAppendOdds(self, match: Match):
+
+        query = {
+            "bookmaker": match.bookmaker,
+            "bookmaker_match_id": match.bookmaker_match_id
+        }
+
+        existing_matches = self.db.matches.find(query)
+        existing_matches = list(existing_matches)
+
+        if len(existing_matches) == 0:
+            # no existing match: inserting new one
+            return self.db.matches.insert_one(match.toJSON())
+
+        elif len(existing_matches) == 1:
+            # existing match: appending odds to existing one
+            for odd in match.odds:          
+                self.db.matches.find_and_modify(
+                    query,
+                    update = {
+                        "$push": { "odds" : odd.toJSON() }
+                    }
+                )
+
+        else:
+            raise Exception
+
+
     def getLastMatchResultDate(self):
         return self.db.match_results.find().sort("date", -1).limit(1).next().get('date')
     
     def dumpDB(self, backup_folder_name: str = ""):
         files = []
         files.append(self.__dumpCollection(self.db.match_results, backup_folder_name))
+        files.append(self.__dumpCollection(self.db.matches, backup_folder_name))
         return files
 
     def __dumpCollection(self, collection, backup_folder_name: str = "") -> str:

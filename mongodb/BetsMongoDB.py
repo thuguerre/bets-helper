@@ -29,7 +29,12 @@ class BetsMongoDB:
 
     def insertMatchOrAppendOdds(self, match: Match):
 
-        existing_matches = self.db.matches.find({"bookmaker": match.bookmaker, "bookmaker_match_id": match.bookmaker_match_id})
+        query = {
+            "bookmaker": match.bookmaker,
+            "bookmaker_match_id": match.bookmaker_match_id
+        }
+
+        existing_matches = self.db.matches.find(query)
         existing_matches = list(existing_matches)
 
         if len(existing_matches) == 0:
@@ -37,13 +42,10 @@ class BetsMongoDB:
             return self.db.matches.insert_one(match.toJSON())
 
         elif len(existing_matches) == 1:
-            # existing match: appending odds to exiting one
+            # existing match: appending odds to existing one
             for odd in match.odds:          
                 self.db.matches.find_and_modify(
-                    query = {
-                        "bookmaker": match.bookmaker,
-                        "bookmaker_match_id": match.bookmaker_match_id
-                    },
+                    query,
                     update = {
                         "$push": { "odds" : odd.toJSON() }
                     }

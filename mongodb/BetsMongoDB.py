@@ -61,6 +61,7 @@ class BetsMongoDB:
     def dumpDB(self, backup_folder_name: str = ""):
         files = []
         files.append(self.__dumpCollection(self.db.match_results, backup_folder_name))
+        files.append(self.__dumpCollection(self.db.matches, backup_folder_name))
         return files
 
     def __dumpCollection(self, collection, backup_folder_name: str = "") -> str:

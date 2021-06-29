@@ -7,7 +7,7 @@ from datetime import datetime
 import os
 import sys
 from typing import List
-
+import logging
 
 currentdir = os.path.dirname(os.path.realpath(__file__))
 parentdir = os.path.dirname(currentdir)
@@ -80,6 +80,7 @@ class WinamaxCrawler:
                 if match["status"] == 'PREMATCH':
                     oddStatus = OddStatus.PREMATCH
                 else:
+                    logging.fatal("Unknown match status: " + match["status"])
                     raise ParseException
 
                 mainBet = PRELOADED_STATE["bets"][str(match["mainBetId"])]

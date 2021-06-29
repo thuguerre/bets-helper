@@ -26,3 +26,6 @@ class LocalExecHelper:
         os.environ["MONGODB_USER"] = config('MONGODB_USER')
         os.environ["MONGODB_PWD"] = config('MONGODB_PWD')
         os.environ["MONGODB_NAME"] = config('MONGODB_NAME')
+        os.environ["MONGODB_GROUP_ID"] = config('MONGODB_GROUP_ID')
+        os.environ["MONGODB_PUBLIC_KEY"] = config('MONGODB_PUBLIC_KEY')
+        os.environ["MONGODB_PRIVATE_KEY"] = config('MONGODB_PRIVATE_KEY')

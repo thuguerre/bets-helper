@@ -1,7 +1,6 @@
 import pytest
 import unittest
-from baseball_japan.models import Converter
-from betsmodels import MatchResult
+from betsmodels import BaseballJapanConverter, MatchResult
 
 class TestConvertMatchResultsToMatch(unittest.TestCase):
 
@@ -14,7 +13,7 @@ class TestConvertMatchResultsToMatch(unittest.TestCase):
     @pytest.mark.unittest
     def test_converter(self):
         
-        converter = Converter()
+        converter = BaseballJapanConverter()
 
         self.assertEqual(converter.get_winamax_name("T"), "Hanshin Tigers")
         self.assertEqual(converter.get_winamax_id("T"), 22108)

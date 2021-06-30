@@ -7,7 +7,7 @@ from LocalExecHelper import LocalExecHelper
 
 class TestUpdateScoresInDb(unittest.TestCase):
 
-    mongodb: BetsMongoDB = None
+    #mongodb: BetsMongoDB = None
 
     def setUp(self):
 

@@ -1,6 +1,6 @@
 from pymongo import MongoClient
 from bson.json_util import dumps
-from datetime import datetime
+from datetime import datetime, timedelta
 import sys
 from pathlib import Path
 import os
@@ -50,6 +50,36 @@ class BetsMongoDB:
                         "$push": { "odds" : odd.toJSON() }
                     }
                 )
+
+        else:
+            raise Exception
+
+    def insertMatchOrUpdateScores(self, match: Match):
+
+        query = {
+            "bookmaker": match.bookmaker,
+            "match_date": {"$gt": match.match_date},
+            "match_date": {"$lt": match.match_date + timedelta(days=1)},
+            "bookmaker_home_team_id": match.bookmaker_home_team_id,
+            "bookmaker_visitor_team_id": match.bookmaker_visitor_team_id,
+        }
+
+        existing_matches = self.db.matches.find(query)
+        existing_matches = list(existing_matches)
+
+        if len(existing_matches) == 0:
+            # no existing match: inserting new one
+            return self.db.matches.insert_one(match.toJSON())
+
+        elif len(existing_matches) == 1:
+            # existing match: updating scores to existing one    
+            self.db.matches.find_and_modify(
+                query,
+                update = {
+                    "$set": { "home_team_score" : match.home_team_score },
+                    "$set": { "visitor_team_score" : match.visitor_team_score }
+                }
+            )
 
         else:
             raise Exception

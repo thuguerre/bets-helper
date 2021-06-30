@@ -146,7 +146,8 @@ if __name__ == '__main__':
 
         bets_db = BetsMongoDB()
         for match_result in match_results:
-            result = bets_db.insertMatchResult(match_result)
+            bets_db.insertMatchResult(match_result)
+            bets_db.insertMatchOrUpdateScores(match_result.toMatch())
 
         print("RESULTS_UPDATED")
     else:

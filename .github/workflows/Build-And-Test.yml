@@ -57,4 +57,4 @@ jobs:
     - name: Execute
       id: execute
       run: |
-        python main.py upload_spreadsheet:no upload_mongodb:no
+        python main_retrieve_match_results.py upload_spreadsheet:no upload_mongodb:no

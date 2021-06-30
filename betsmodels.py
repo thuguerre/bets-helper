@@ -85,6 +85,7 @@ class OddType(Enum):
 
 class OddStatus(Enum):
     PREMATCH = 1
+    LIVE = 2
 
 class Bookmaker(Enum):
     WINAMAX = 1

@@ -79,6 +79,8 @@ class WinamaxCrawler:
                 
                 if match["status"] == 'PREMATCH':
                     oddStatus = OddStatus.PREMATCH
+                elif match["status"] == 'LIVE':
+                    oddStatus = OddStatus.LIVE
                 else:
                     logging.fatal("Unknown match status: " + match["status"])
                     raise ParseException

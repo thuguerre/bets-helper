@@ -1,16 +1,21 @@
-from pymongo import MongoClient
+# Standard Library imports
+import os
+import sys
+import logging
 from bson.json_util import dumps
 from datetime import datetime, timedelta
-import sys
 from pathlib import Path
-import os
-import logging
 
+# Third party imports
+from pymongo import MongoClient
+
+# Local imports
 currentdir = os.path.dirname(os.path.realpath(__file__))
 parentdir = os.path.dirname(currentdir)
 sys.path.append(parentdir)
 from betsmodels import MatchResult
 from betsmodels import Match
+
 
 class BetsMongoDB:
 

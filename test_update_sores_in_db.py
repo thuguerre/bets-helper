@@ -1,7 +1,10 @@
+# Standard Library imports
+import os
 import pytest
 import unittest
-import os
-from LocalExecHelper import LocalExecHelper
+
+# Local imports
+import localcontextloader
 # from mongodb.BetsMongoDB import BetsMongoDB
 
 
@@ -10,12 +13,7 @@ class TestUpdateScoresInDb(unittest.TestCase):
     #mongodb: BetsMongoDB = None
 
     def setUp(self):
-
-        try:
-            os.environ["MONGODB_NAME"]
-        except KeyError:
-            LocalExecHelper()
-
+        pass
         #self.mongodb = BetsMongoDB()
         #self.mongodb.matches.drop()
 

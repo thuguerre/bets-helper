@@ -1,6 +1,10 @@
+# Standard Library imports
 import pytest
 import unittest
+
+# Local imports
 from betsmodels import BaseballJapanConverter, MatchResult
+
 
 class TestConvertMatchResultsToMatch(unittest.TestCase):
 

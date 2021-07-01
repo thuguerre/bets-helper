@@ -1,8 +1,11 @@
-from BetsMongoDB import BetsMongoDB
-from LocalExecHelper import LocalExecHelper
-import logging
-import sys
+# Standard Library imports
 import os
+import sys
+import logging
+
+# Local imports
+import localcontextloader
+from BetsMongoDB import BetsMongoDB
 from GoogleDriveHelper import GoogleDriveHelper
 
 
@@ -19,11 +22,7 @@ if __name__ == '__main__':
 
     # loading script arguments
     for args in sys.argv:
-
-        if args == "local_exec":
-            LocalExecHelper()
-        
-        elif args == "delete_local_files:yes":
+        if args == "delete_local_files:yes":
             delete_local_files = True
 
     # downloading files from GDrive

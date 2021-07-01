@@ -1,9 +1,12 @@
-from BetsMongoDB import BetsMongoDB
-from LocalExecHelper import LocalExecHelper
-import logging
-import sys
+# Standard Library imports
 import os
-from GoogleDriveHelper import GoogleDriveHelper
+import sys
+import logging
+
+# Local imports
+import localcontextloader
+from mongodb.BetsMongoDB import BetsMongoDB
+from mongodb.GoogleDriveHelper import GoogleDriveHelper
 
 
 BACKUP_FOLDER_NAME = "./backup/"
@@ -14,7 +17,6 @@ BACKUP_FOLDER_NAME = "./backup/"
 def printDocumentation():
 
     print("")
-    print("args 'local_exec' to load required environment variables. Must be first argument, to let others working.")
     print("args 'upload_to_gdrive:yes|no' to upload files to GDrive. Yes by default.")
     print("args 'delete_local_files:yes|no' to delete locally-dumped files after their upload to GDrive.")
     print("")
@@ -36,10 +38,7 @@ if __name__ == '__main__':
     # loading script arguments
     for args in sys.argv:
 
-        if args == "local_exec":
-            LocalExecHelper()
-        
-        elif args == "delete_local_files:yes":
+        if args == "delete_local_files:yes":
             delete_local_files = True
 
         elif args == "delete_local_files:no":

@@ -1,8 +1,11 @@
-from BetsMongoDB import BetsMongoDB
-import logging
+# Standard Library imports
 import sys
+import logging
+
+# Local imports
+import localcontextloader
+from BetsMongoDB import BetsMongoDB
 from GoogleDriveHelper import GoogleDriveHelper
-from LocalExecHelper import LocalExecHelper
 
 
 #
@@ -22,8 +25,6 @@ def printDocumentation():
 if __name__ == '__main__':
 
     logging.getLogger().setLevel(logging.WARN)
-
-    LocalExecHelper()
 
     list_files = False
     delete_all_files = False

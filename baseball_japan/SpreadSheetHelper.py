@@ -1,6 +1,10 @@
+# Standard Library imports
 import os
 import datetime
+
+# Third party imports
 import gspread
+
 
 SPREADSHEET_NAME = "Suivi paris"
 SPREADSHEET_INDEX = 6               # index of 'Baseball Japan RAW', starting from 0

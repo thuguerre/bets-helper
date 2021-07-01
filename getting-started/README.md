@@ -8,7 +8,7 @@ You can run the `requirements.txt` to install or upgrade all libraries which are
 
 ## Set `.env` file to provide local environment variable
 
-In root folder, create a `.env` file what will provide required environment variables to your local context. This file will be read by `python-decouple` library (see `LocalExecHelper.py`).
+In root folder, create a `.env` file what will provide required environment variables to your local context. This file will be read by `python-decouple` library (see `localcontextloader.py`).
 
 The `.env` file must have following values:
 

@@ -1,3 +1,4 @@
+# Standard Library imports
 import datetime
 from enum import Enum
 from typing import List
@@ -136,12 +137,12 @@ class Match:
 
     def toMongoDBDataFragment(self) -> str:
         return (
-            "\"bookmaker\": \"" + self.bookmaker + "\""
-            + ", \"bookmaker_match_id\": \"" + self.bookmaker_match_id + "\""
-            + ", \"bookmaker_home_team_name\": \"" + self.bookmaker_home_team_name + "\""
-            + ", \"bookmaker_home_team_id\": \"" + self.bookmaker_home_team_id + "\""
-            + ", \"bookmaker_visitor_team_name\": \"" + self.bookmaker_visitor_team_name + "\""
-            + ", \"bookmaker_visitor_team_id\": \"" + self.bookmaker_visitor_team_id + "\""
+            f"\"bookmaker\": \"{self.bookmaker}\""
+            + f", \"bookmaker_match_id\": \"{self.bookmaker_match_id}\""
+            + f", \"bookmaker_home_team_name\": \"{self.bookmaker_home_team_name}\""
+            + f", \"bookmaker_home_team_id\": \"{self.bookmaker_home_team_id}\""
+            + f", \"bookmaker_visitor_team_name\": \"{self.bookmaker_visitor_team_name}\""
+            + f", \"bookmaker_visitor_team_id\": \"{self.bookmaker_visitor_team_id}\""
         )
 
 class BaseballJapanConverter:
@@ -210,14 +211,14 @@ class MatchResult:
 
     def toMongoDBDataFragment(self) -> str:
         return (
-            "\"date\": \"" + self.date + "\""
-            + ", \"sport\": \"" + self.sport + "\""
-            + ", \"country\": \"" + self.country + "\""
-            + ", \"league\": \"" + self.league + "\""
-            + ", \"home_team\": \"" + self.home_team + "\""
-            + ", \"home_score\": \"" + self.home_score + "\""
-            + ", \"visitor_team\": \"" + self.visitor_team + "\""
-            + ", \"visitor_score\": \"" + self.visitor_score + "\""
+            f"\"date\": \"{self.date}\""
+            + f", \"sport\": \"{self.sport}\""
+            + f", \"country\": \"{self.country}\""
+            + f", \"league\": \"{self.league}\""
+            + f", \"home_team\": \"{self.home_team}\""
+            + f", \"home_score\": \"{self.home_score}\""
+            + f", \"visitor_team\": \"{self.visitor_team}\""
+            + f", \"visitor_score\": \"{self.visitor_score}\""
         )
 
     def toMatch(self) -> Match:

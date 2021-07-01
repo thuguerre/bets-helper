@@ -6,8 +6,8 @@ from datetime import date, timedelta, datetime
 
 # Local imports
 import localcontextloader
-from baseball_japan import NPBCrawler
-from baseball_japan import SpreadSheetHelper
+from baseball_japan.NPBCrawler import NPBCrawler
+from baseball_japan.SpreadSheetHelper import SpreadSheetHelper
 from mongodb.BetsMongoDB import BetsMongoDB
 
 

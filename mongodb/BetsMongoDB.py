@@ -19,18 +19,18 @@ from betsmodels import Match
 
 class BetsMongoDB:
 
-    db = None
+    __db = None
 
     def __init__(self):
         mongodb_user = os.environ['MONGODB_USER']
         mongodb_pwd = os.environ['MONGODB_PWD']
         mongodb_name = os.environ['MONGODB_NAME']
 
-        client = MongoClient("mongodb+srv://"+mongodb_user+":"+mongodb_pwd+"@cluster0.gu9bi.mongodb.net/"+mongodb_name+"?retryWrites=true&w=majority")
-        self.db = client.get_default_database()
+        client = MongoClient(f"mongodb+srv://{mongodb_user}:{mongodb_pwd}@cluster0.gu9bi.mongodb.net/{mongodb_name}?retryWrites=true&w=majority")
+        self.__db = client.get_default_database()
 
     def insertMatchResult(self, match_result: MatchResult):
-        return self.db.match_results.insert_one(match_result.toJSON())
+        return self.__db.match_results.insert_one(match_result.toJSON())
 
     def insertMatchOrAppendOdds(self, match: Match):
 
@@ -39,17 +39,17 @@ class BetsMongoDB:
             "bookmaker_match_id": match.bookmaker_match_id
         }
 
-        existing_matches = self.db.matches.find(query)
+        existing_matches = self.__db.matches.find(query)
         existing_matches = list(existing_matches)
 
         if len(existing_matches) == 0:
             # no existing match: inserting new one
-            return self.db.matches.insert_one(match.toJSON())
+            return self.__db.matches.insert_one(match.toJSON())
 
         elif len(existing_matches) == 1:
             # existing match: appending odds to existing one
             for odd in match.odds:          
-                self.db.matches.find_and_modify(
+                self.__db.matches.find_and_modify(
                     query,
                     update = {
                         "$push": { "odds" : odd.toJSON() }
@@ -69,16 +69,16 @@ class BetsMongoDB:
             "bookmaker_visitor_team_id": match.bookmaker_visitor_team_id,
         }
 
-        existing_matches = self.db.matches.find(query)
+        existing_matches = self.__db.matches.find(query)
         existing_matches = list(existing_matches)
 
         if len(existing_matches) == 0:
             # no existing match: inserting new one
-            return self.db.matches.insert_one(match.toJSON())
+            return self.__db.matches.insert_one(match.toJSON())
 
         elif len(existing_matches) == 1:
             # existing match: updating scores to existing one    
-            self.db.matches.find_and_modify(
+            self.__db.matches.find_and_modify(
                 query,
                 update = {
                     "$set": { "home_team_score" : match.home_team_score },
@@ -91,12 +91,12 @@ class BetsMongoDB:
 
 
     def getLastMatchResultDate(self):
-        return self.db.match_results.find().sort("date", -1).limit(1).next().get('date')
+        return self.__db.match_results.find().sort("date", -1).limit(1).next().get('date')
     
     def dumpDB(self, backup_folder_name: str = ""):
         files = []
-        files.append(self.__dumpCollection(self.db.match_results, backup_folder_name))
-        files.append(self.__dumpCollection(self.db.matches, backup_folder_name))
+        files.append(self.__dumpCollection(self.__db.match_results, backup_folder_name))
+        files.append(self.__dumpCollection(self.__db.matches, backup_folder_name))
         return files
 
     def __dumpCollection(self, collection, backup_folder_name: str = "") -> str:
@@ -124,3 +124,9 @@ class BetsMongoDB:
         suffix = now.strftime("%Y%m%d%H%M%S")
 
         return collection.full_name + '.' + suffix + '.json'
+
+    def dropCollection(self, collection: str):
+        self.__db[collection].drop()
+
+    def findMatches(self):
+        return self.__db.matches.find({})

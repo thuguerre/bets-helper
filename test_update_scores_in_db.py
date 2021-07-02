@@ -18,12 +18,13 @@ class TestUpdateScoresInDb(unittest.TestCase):
     def setUp(self):
         self.__betsdb = BetsMongoDB()
         self.__betsdb.dropCollection('matches')
+        self.__betsdb.dropCollection('match_results')
 
     def tearDown(self):
         pass
 
     @pytest.mark.unittest
-    def test_insert_match(self):
+    def test_insert_match_or_update_score(self):
 
         # data case
         date: datetime = datetime.strptime("2021-06-30", "%Y-%m-%d")
@@ -69,3 +70,26 @@ class TestUpdateScoresInDb(unittest.TestCase):
         self.assertEqual(len(matches), 1)
         self.assertEqual(matches[0]["home_team_score"], home_score)
         self.assertEqual(matches[0]["visitor_team_score"], visitor_new_score)
+
+    @pytest.mark.unittest
+    def test_get_match_results(self):
+
+        # verifying we start from an empty database        
+        self.assertEqual(len(self.__betsdb.get_match_results()), 0)
+
+        # filling database with a known data case
+        data = [
+            MatchResult("2020-06-30", "baseball", "japan", "Regular Season", "T", 1, "C", 2),
+            MatchResult("2020-06-30", "baseball", "japan", "Regular Season", "DB", 5, "F", 4),
+            MatchResult("2020-07-01", "baseball", "japan", "Regular Season", "T", 1, "C", 2),
+            MatchResult("2020-07-01", "baseball", "japan", "Regular Season", "DB", 1, "F", 2),
+            MatchResult("2020-07-01", "baseball", "japan", "Regular Season", "G", 10, "M", 15),
+        ]
+
+        for match_result in data:
+            self.__betsdb.insertMatchResult(match_result)
+
+        # verifying match results have been correctly inserted
+        match_results: List[MatchResult] = self.__betsdb.get_match_results()
+        self.assertEqual(len(match_results), len(data))
+

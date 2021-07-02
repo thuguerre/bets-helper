@@ -5,6 +5,7 @@ import logging
 from bson.json_util import dumps
 from datetime import datetime, timedelta
 from pathlib import Path
+from typing import List
 
 # Third party imports
 from pymongo import MongoClient
@@ -142,3 +143,21 @@ class BetsMongoDB:
         }
 
         return self.__db.matches.find(query)
+
+    def get_match_results(self) -> List[MatchResult]:
+        tmp_match_results = list(self.__db.match_results.find({}))
+        match_results = []
+
+        for tmp_match_result in tmp_match_results:
+            match_results.append(MatchResult(
+                tmp_match_result["date"],
+                tmp_match_result["sport"],
+                tmp_match_result["country"],
+                tmp_match_result["league"],
+                tmp_match_result["home_team"],
+                tmp_match_result["home_score"],
+                tmp_match_result["visitor_team"],
+                tmp_match_result["visitor_score"]
+            ))
+
+        return match_results

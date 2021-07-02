@@ -130,3 +130,15 @@ class BetsMongoDB:
 
     def findMatches(self):
         return self.__db.matches.find({})
+
+    def findMatch(self, date: str, bookmaker: str, bookmaker_home_team_id: int, bookmaker_visitor_team_id: int):
+
+        query = {
+            "bookmaker": bookmaker,
+            "match_date": {"$gt": date},
+            "match_date": {"$lt": date + timedelta(days=1)},
+            "bookmaker_home_team_id": bookmaker_home_team_id,
+            "bookmaker_visitor_team_id": bookmaker_visitor_team_id,
+        }
+
+        return self.__db.matches.find(query)

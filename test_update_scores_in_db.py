@@ -46,7 +46,7 @@ class TestUpdateScoresInDb(unittest.TestCase):
         # first insertion in database
         match_result = MatchResult(date.strftime("%Y-%m-%d"), sport, country, league, home_team, home_score, visitor_team, visitor_old_score)
         match_to_insert = match_result.toMatch()
-        self.__betsdb.insertMatchOrUpdateScores(match_to_insert)
+        self.__betsdb.insert_match_or_update_scores(match_to_insert)
 
         # verifying a new match has been inserted
         self.assertEqual(len(list(self.__betsdb.findMatches())), 1)
@@ -60,7 +60,7 @@ class TestUpdateScoresInDb(unittest.TestCase):
         # updating score in database
         match_result.visitor_score = visitor_new_score
         match_to_update = match_result.toMatch()
-        self.__betsdb.insertMatchOrUpdateScores(match_to_update)
+        self.__betsdb.insert_match_or_update_scores(match_to_update)
 
         # verifying a new match has not been inserted
         self.assertEqual(len(list(self.__betsdb.findMatches())), 1)
@@ -93,3 +93,32 @@ class TestUpdateScoresInDb(unittest.TestCase):
         match_results: List[MatchResult] = self.__betsdb.get_match_results()
         self.assertEqual(len(match_results), len(data))
 
+    @pytest.mark.unittest
+    def test_copy_match_results_to_matches(self):
+
+        # verifying we start from an empty database        
+        self.assertEqual(len(list(self.__betsdb.findMatches())), 0)
+        self.assertEqual(len(self.__betsdb.get_match_results()), 0)
+
+        # filling database with a known data case
+        data = [
+            MatchResult("2020-06-30", "baseball", "japan", "Regular Season", "T", 1, "C", 2),
+            MatchResult("2020-06-30", "baseball", "japan", "Regular Season", "DB", 5, "F", 4),
+            MatchResult("2020-07-01", "baseball", "japan", "Regular Season", "T", 1, "C", 2),
+            MatchResult("2020-07-01", "baseball", "japan", "Regular Season", "DB", 1, "F", 2),
+            MatchResult("2020-07-01", "baseball", "japan", "Regular Season", "G", 10, "M", 15),
+        ]
+
+        for match_result in data:
+            self.__betsdb.insertMatchResult(match_result)
+
+        # verifying match results have been correctly inserted
+        match_results: List[MatchResult] = self.__betsdb.get_match_results()
+        self.assertEqual(len(match_results), len(data))
+
+        # copying match_results to matches
+        self.__betsdb.copy_match_results_to_matches()
+
+        # verifying matches have been correctly inserted
+        self.assertEqual(len(list(self.__betsdb.findMatches())), len(data))
+        self.assertEqual(len(match_results), len(data))

@@ -60,12 +60,16 @@ class BetsMongoDB:
         else:
             raise Exception
 
-    def insertMatchOrUpdateScores(self, match: Match):
+    def insert_match_or_update_scores(self, match: Match):
+
+        match_day = datetime.strptime(match.match_date.strftime("%Y-%m-%d"),"%Y-%m-%d")
 
         query = {
             "bookmaker": match.bookmaker,
-            "match_date": {"$gt": match.match_date},
-            "match_date": {"$lt": match.match_date + timedelta(days=1)},
+            "match_date": {
+                "$gte": match_day,
+                "$lt": match_day + timedelta(days=1)
+                },
             "bookmaker_home_team_id": match.bookmaker_home_team_id,
             "bookmaker_visitor_team_id": match.bookmaker_visitor_team_id,
         }
@@ -161,3 +165,10 @@ class BetsMongoDB:
             ))
 
         return match_results
+
+    def copy_match_results_to_matches(self):
+
+        match_results = self.get_match_results()
+
+        for match_result in match_results:
+            self.insert_match_or_update_scores(match_result.toMatch())

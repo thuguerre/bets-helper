@@ -122,3 +122,37 @@ class TestUpdateScoresInDb(unittest.TestCase):
         # verifying matches have been correctly inserted
         self.assertEqual(len(list(self.__betsdb.findMatches())), len(data))
         self.assertEqual(len(match_results), len(data))
+
+    @pytest.mark.unittest
+    def test_copy_match_results_to_matches_with_existing_matches(self):
+
+        # verifying we start from an empty database        
+        self.assertEqual(len(list(self.__betsdb.findMatches())), 0)
+        self.assertEqual(len(self.__betsdb.get_match_results()), 0)
+
+        # filling database with a known data case
+        data = [
+            MatchResult("2020-06-30", "baseball", "japan", "Regular Season", "T", 1, "C", 2),
+            MatchResult("2020-06-30", "baseball", "japan", "Regular Season", "DB", 5, "F", 4),
+            MatchResult("2020-07-01", "baseball", "japan", "Regular Season", "T", 1, "C", 2),
+            MatchResult("2020-07-01", "baseball", "japan", "Regular Season", "DB", 1, "F", 2),
+            MatchResult("2020-07-01", "baseball", "japan", "Regular Season", "G", 10, "M", 15),
+        ]
+
+        for match_result in data:
+            self.__betsdb.insertMatchResult(match_result)
+
+        # verifying match results have been correctly inserted
+        match_results: List[MatchResult] = self.__betsdb.get_match_results()
+        self.assertEqual(len(match_results), len(data))
+
+        # inserting a match
+        self.__betsdb.insertMatchOrAppendOdds(data[0].toMatch())
+        self.assertEqual(len(list(self.__betsdb.findMatches())), 1)
+
+        # copying match_results to matches
+        self.__betsdb.copy_match_results_to_matches()
+
+        # verifying matches have been correctly inserted
+        self.assertEqual(len(list(self.__betsdb.findMatches())), len(data))
+        self.assertEqual(len(match_results), len(data))

@@ -32,7 +32,14 @@ jobs:
         python-version: [3.8]
 
     steps:
+
+    - name: Verify we are running on TEST database
+      if: ${{ contains(MONGODB_NAME, 'test') }}
+      run: |
+        exit 1
+
     - uses: actions/checkout@v2
+
     - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v2
       with:

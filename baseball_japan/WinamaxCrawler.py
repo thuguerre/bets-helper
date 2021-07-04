@@ -1,14 +1,16 @@
-import ssl
-import requests
-import re
-from urllib3 import poolmanager
-import json
-from datetime import datetime
+# Standard Library imports
 import os
 import sys
-from typing import List
 import logging
+import ssl
+import requests
+from urllib3 import poolmanager
+import re
+import json
+from datetime import datetime
+from typing import List
 
+# Local imports
 currentdir = os.path.dirname(os.path.realpath(__file__))
 parentdir = os.path.dirname(currentdir)
 sys.path.append(parentdir)

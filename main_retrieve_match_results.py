@@ -1,10 +1,13 @@
+# Standard Library imports
 import sys
-import logging
 import os
+import logging
 from datetime import date, timedelta, datetime
-from baseball_japan import NPBCrawler
-from baseball_japan import SpreadSheetHelper
-from LocalExecHelper import LocalExecHelper
+
+# Local imports
+import localcontextloader
+from baseball_japan.NPBCrawler import NPBCrawler
+from baseball_japan.SpreadSheetHelper import SpreadSheetHelper
 from mongodb.BetsMongoDB import BetsMongoDB
 
 
@@ -18,7 +21,6 @@ def printDocumentation():
     print("args 'yesterday': set FROM and TO date limits at yesterday's date.")
     print("args 'upload_spreadsheet', set to yes or no, to upload to spreadsheet.")
     print("args 'upload_mongodb', set to yes or no, to upload to MongoDB.")
-    print("args 'local_exec' to load required environment variables. Must be first argument, to let others working.")
 
 
 #
@@ -114,9 +116,6 @@ if __name__ == '__main__':
             printDocumentation()
             sys.exit()
 
-        elif args == "local_exec":
-            LocalExecHelper()
-
     # verifying parameters are compatible
     if int(start_year) > int(to_year):
         logging.error("retrieve results from:" + start_year + "-" + start_month + "-" + start_day + " to " + to_year + "-" + to_month + "-" + to_day)
@@ -146,7 +145,8 @@ if __name__ == '__main__':
 
         bets_db = BetsMongoDB()
         for match_result in match_results:
-            result = bets_db.insertMatchResult(match_result)
+            bets_db.insertMatchResult(match_result)
+            bets_db.insertMatchOrUpdateScores(match_result.toMatch())
 
         print("RESULTS_UPDATED")
     else:

@@ -38,7 +38,7 @@ jobs:
           MONGODB_PWD: ${{ secrets.MONGODB_PWD }}
           MONGODB_NAME: ${{ secrets.MONGODB_NAME }}
       run: |
-        result=$(python main.py from:complete_spreadsheet upload_spreadsheet:yes upload_mongodb:yes)
+        result=$(python main_retrieve_match_results.py from:complete_spreadsheet upload_spreadsheet:yes upload_mongodb:yes)
         echo "::set-output name=JPN_BASEBALL_SCRIPT_RESULT::$result"
 
     - name: Notify results are ready

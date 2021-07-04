@@ -1,15 +1,18 @@
+# Standard Library imports
+import os
+import sys
 import logging
 import requests
 import ssl
 import re
-import sys
-import os
 from urllib3 import poolmanager
 
+# Local imports
 currentdir = os.path.dirname(os.path.realpath(__file__))
 parentdir = os.path.dirname(currentdir)
 sys.path.append(parentdir)
 from betsmodels import MatchResult
+
 
 URL_Farm_Leagues = "https://npb.jp/bis/eng/<YEAR>/calendar/index_farm_<MONTH>.html"
 URL_Regular_Season = "https://npb.jp/bis/eng/<YEAR>/calendar/index_<MONTH>.html"

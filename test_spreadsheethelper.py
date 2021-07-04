@@ -1,14 +1,16 @@
+# Standard Library imports
 import pytest
 import unittest
-from baseball_japan import SpreadSheetHelper
-from LocalExecHelper import LocalExecHelper
+
+# Local imports
+import localcontextloader
+from baseball_japan.SpreadSheetHelper import SpreadSheetHelper
 
 class TestSpreadSheetHelper(unittest.TestCase):
 
     helper = None
 
     def setUp(self):
-        LocalExecHelper()
         self.helper = SpreadSheetHelper()
 
     def tearDown(self):

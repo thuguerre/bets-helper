@@ -1,9 +1,13 @@
+# Standard Library imports
 import os
 import typing
+from pathlib import Path
+
+# Third-party imports
 from pydrive.auth import GoogleAuth
 from pydrive.drive import GoogleDrive
 from oauth2client.service_account import ServiceAccountCredentials
-from pathlib import Path
+
 
 class GoogleDriveHelper:
 

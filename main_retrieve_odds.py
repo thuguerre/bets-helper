@@ -1,9 +1,12 @@
-from baseball_japan.WinamaxCrawler import WinamaxCrawler
-import logging
+# Standard Library imports
 import os
 import sys
+import logging
+
+# Local imports
+import localcontextloader
+from baseball_japan.WinamaxCrawler import WinamaxCrawler
 from mongodb.BetsMongoDB import BetsMongoDB
-from LocalExecHelper import LocalExecHelper
 
 
 #
@@ -12,11 +15,6 @@ from LocalExecHelper import LocalExecHelper
 if __name__ == '__main__':
 
     logging.getLogger().setLevel(logging.INFO)
-
-    try:
-        os.environ["MONGODB_NAME"]
-    except KeyError:
-        LocalExecHelper()
 
     # retrieving odds from Winamax
     crawler = WinamaxCrawler()

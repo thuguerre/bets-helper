@@ -37,4 +37,4 @@ jobs:
           MONGODB_PWD: ${{ secrets.MONGODB_PWD }}
           MONGODB_NAME: ${{ secrets.MONGODB_NAME }}
       run: |
-        python ./mongodb/main_dump_db.py upload_to_gdrive:yes
+        python ./main_dump_db.py upload_to_gdrive:yes

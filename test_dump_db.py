@@ -1,7 +1,16 @@
+# Standard Library imports
+import os
 import pytest
 import unittest
-import os
 from pathlib import Path
+from datetime import datetime
+import glob
+import re
+import random
+
+# Local imports
+import localcontextloader
+from betsmodels import MatchResult
 from mongodb.GoogleDriveHelper import GoogleDriveHelper
 from mongodb.BetsMongoDB import BetsMongoDB
 from betsmodels import MatchResult
@@ -9,11 +18,6 @@ from betsmodels import Match
 from betsmodels import Sport
 from betsmodels import Country
 from betsmodels import Bookmaker
-from LocalExecHelper import LocalExecHelper
-from datetime import datetime
-import glob
-import re
-import random
 
 
 BACKUP_FOLDER_NAME = "./backup/"
@@ -24,13 +28,9 @@ class TestDumpDB(unittest.TestCase):
     mongodb_name = None
 
     def setUp(self):
-        
-        try:
-            os.environ["MONGODB_NAME"]
-        except KeyError:
-            LocalExecHelper()
 
         self.mongodb_name = os.environ["MONGODB_NAME"]
+        print(os.environ["MONGODB_NAME"])
 
         self.__prepare_backup_folder()
         self.__test_is_backup_folder_empty()
@@ -92,7 +92,7 @@ class TestDumpDB(unittest.TestCase):
     @pytest.mark.unittest
     def test_backup_file_is_generated(self):
         
-        os.system("python3 ./mongodb/main_dump_db.py upload_to_gdrive:no delete_local_files:no")
+        os.system("python3 ./main_dump_db.py upload_to_gdrive:no delete_local_files:no")
 
         self.__test_number_files_in_backup_folder(2)
         self.__test_exist_backup_file_in_backup_folder('match_results')
@@ -103,7 +103,7 @@ class TestDumpDB(unittest.TestCase):
     @pytest.mark.unittest
     def test_backup_file_is_generated_and_locally_deleted(self):
         
-        os.system("python3 ./mongodb/main_dump_db.py upload_to_gdrive:no delete_local_files:yes")
+        os.system("python3 ./main_dump_db.py upload_to_gdrive:no delete_local_files:yes")
 
         self.__test_is_backup_folder_empty()
         self.__test_is_gdrive_folder_empty()
@@ -111,7 +111,7 @@ class TestDumpDB(unittest.TestCase):
     @pytest.mark.unittest
     def test_backup_file_is_uploaded(self):
         
-        os.system("python3 ./mongodb/main_dump_db.py upload_to_gdrive:yes delete_local_files:no")
+        os.system("python3 ./main_dump_db.py upload_to_gdrive:yes delete_local_files:no")
 
         self.__test_number_files_in_backup_folder(2)
         self.__test_exist_backup_file_in_backup_folder('match_results')
@@ -124,7 +124,7 @@ class TestDumpDB(unittest.TestCase):
     @pytest.mark.unittest
     def test_backup_file_is_uploaded_and_locally_deleted(self):
         
-        os.system("python3 ./mongodb/main_dump_db.py upload_to_gdrive:yes delete_local_files:yes")
+        os.system("python3 ./main_dump_db.py upload_to_gdrive:yes delete_local_files:yes")
 
         self.__test_is_backup_folder_empty()
 
@@ -167,7 +167,7 @@ class TestDumpDB(unittest.TestCase):
         mongodb.insertMatchOrAppendOdds(match)
 
         # dumping the mongo db
-        os.system("python3 ./mongodb/main_dump_db.py upload_to_gdrive:no delete_local_files:no")
+        os.system("python3 ./main_dump_db.py upload_to_gdrive:no delete_local_files:no")
 
         # testing the dump files are here
         self.__test_number_files_in_backup_folder(2)

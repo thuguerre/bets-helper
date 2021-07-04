@@ -34,7 +34,12 @@ jobs:
     steps:
 
     - name: Verify we are running on TEST database
-      if: ${{ contains(MONGODB_NAME, 'test') }}
+      if: ${{ contains(env.MONGODB_NAME, 'test') }}
+      run: |
+        exit 1
+
+    - name: Verify we are running on TEST database
+      if: ${{ !contains(env.MONGODB_NAME, 'test') }}
       run: |
         exit 1
 

@@ -86,8 +86,10 @@ class BetsMongoDB:
             self.__db.matches.find_and_modify(
                 query,
                 update = {
-                    "$set": { "home_team_score" : match.home_team_score },
-                    "$set": { "visitor_team_score" : match.visitor_team_score }
+                    "$set": {
+                        "home_team_score" : match.home_team_score,
+                        "visitor_team_score" : match.visitor_team_score
+                    }
                 }
             )
 

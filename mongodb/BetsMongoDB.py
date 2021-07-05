@@ -14,7 +14,6 @@ from pymongo import MongoClient
 currentdir = os.path.dirname(os.path.realpath(__file__))
 parentdir = os.path.dirname(currentdir)
 sys.path.append(parentdir)
-from betsmodels import MatchResult
 from betsmodels import Match
 
 
@@ -29,9 +28,6 @@ class BetsMongoDB:
 
         client = MongoClient(f"mongodb+srv://{mongodb_user}:{mongodb_pwd}@cluster0.gu9bi.mongodb.net/{mongodb_name}?retryWrites=true&w=majority")
         self.__db = client.get_default_database()
-
-    def insertMatchResult(self, match_result: MatchResult):
-        return self.__db.match_results.insert_one(match_result.toJSON())
 
     def insertMatchOrAppendOdds(self, match: Match):
 
@@ -96,13 +92,8 @@ class BetsMongoDB:
         else:
             raise Exception
 
-
-    def getLastMatchResultDate(self):
-        return self.__db.match_results.find().sort("date", -1).limit(1).next().get('date')
-    
     def dumpDB(self, backup_folder_name: str = ""):
         files = []
-        files.append(self.__dumpCollection(self.__db.match_results, backup_folder_name))
         files.append(self.__dumpCollection(self.__db.matches, backup_folder_name))
         return files
 
@@ -150,27 +141,10 @@ class BetsMongoDB:
 
         return self.__db.matches.find(query)
 
-    def get_match_results(self) -> List[MatchResult]:
-        tmp_match_results = list(self.__db.match_results.find({}))
-        match_results = []
+    def get_last_match_result_date(self):
 
-        for tmp_match_result in tmp_match_results:
-            match_results.append(MatchResult(
-                tmp_match_result["date"],
-                tmp_match_result["sport"],
-                tmp_match_result["country"],
-                tmp_match_result["league"],
-                tmp_match_result["home_team"],
-                tmp_match_result["home_score"],
-                tmp_match_result["visitor_team"],
-                tmp_match_result["visitor_score"]
-            ))
+        query = {
+            "home_team_score": { "$ne": None }
+        }
 
-        return match_results
-
-    def copy_match_results_to_matches(self):
-
-        match_results = self.get_match_results()
-
-        for match_result in match_results:
-            self.insert_match_or_update_scores(match_result.toMatch())
+        return self.__db.matches.find(query).sort("match_date", -1).limit(1).next().get('match_date')

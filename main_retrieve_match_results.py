@@ -67,7 +67,7 @@ if __name__ == '__main__':
         elif args == "from:complete_mongodb":
 
             bets_db = BetsMongoDB()
-            last_result_date = bets_db.getLastMatchResultDate()
+            last_result_date = bets_db.get_last_match_result_date()
             last_result_date = datetime.strptime(last_result_date, '%Y-%m-%d')
             last_result_date = last_result_date + timedelta(days=1)
 
@@ -145,7 +145,6 @@ if __name__ == '__main__':
 
         bets_db = BetsMongoDB()
         for match_result in match_results:
-            bets_db.insertMatchResult(match_result)
             bets_db.insert_match_or_update_scores(match_result.toMatch())
 
         print("RESULTS_UPDATED")

@@ -8,7 +8,10 @@ from typing import List
 # Local imports
 import localcontextloader
 from mongodb.BetsMongoDB import BetsMongoDB
-from betsmodels import MatchResult
+from betsmodels import Bookmaker
+from betsmodels import Sport
+from betsmodels import Country
+from betsmodels import Match
 from betsmodels import BaseballJapanConverter
 
 
@@ -19,7 +22,6 @@ class TestUpdateScoresInDb(unittest.TestCase):
     def setUp(self):
         self.__betsdb = BetsMongoDB()
         self.__betsdb.dropCollection('matches')
-        self.__betsdb.dropCollection('match_results')
 
     def tearDown(self):
         pass
@@ -27,26 +29,32 @@ class TestUpdateScoresInDb(unittest.TestCase):
     @pytest.mark.unittest
     def test_insert_match_or_update_score(self):
 
+        converter = BaseballJapanConverter()
+
         # data case
         date: datetime = datetime.strptime("2021-06-30", "%Y-%m-%d")
-        bookmaker = "WINAMAX"
-        sport = "baseball"
-        country = "japan"
+        bookmaker = Bookmaker.WINAMAX
+        sport = Sport.BASEBALL
+        country = Country.JAPAN
         league = "Regular Season"
+        match_id = "-1"
         home_team = "T"
+        home_team_name = converter.get_winamax_name(home_team)
+        home_team_id = converter.get_winamax_id(home_team)
         home_score = 3
         visitor_team = "DB"
+        visitor_team_name = converter.get_winamax_name(visitor_team)
+        visitor_team_id = converter.get_winamax_id(visitor_team)
         visitor_old_score = 4
         visitor_new_score = 5
-
-        converter = BaseballJapanConverter()
 
         # verifying we start from an empty database        
         self.assertEqual(len(list(self.__betsdb.findMatches())), 0)
 
         # first insertion in database
-        match_result = MatchResult(date.strftime("%Y-%m-%d"), sport, country, league, home_team, home_score, visitor_team, visitor_old_score)
-        match_to_insert = match_result.toMatch()
+        match_to_insert = Match(date, sport, country, league, date, bookmaker, match_id, home_team_name, home_team_id, visitor_team_name, visitor_team_id)
+        match_to_insert.home_team_score = home_score
+        match_to_insert.visitor_team_score = visitor_old_score
         self.__betsdb.insert_match_or_update_scores(match_to_insert)
 
         # verifying a new match has been inserted
@@ -59,9 +67,8 @@ class TestUpdateScoresInDb(unittest.TestCase):
         self.assertEqual(matches[0]["visitor_team_score"], visitor_old_score)
 
         # updating score in database
-        match_result.visitor_score = visitor_new_score
-        match_to_update = match_result.toMatch()
-        self.__betsdb.insert_match_or_update_scores(match_to_update)
+        match_to_insert.visitor_team_score = visitor_new_score
+        self.__betsdb.insert_match_or_update_scores(match_to_insert)
 
         # verifying a new match has not been inserted
         self.assertEqual(len(list(self.__betsdb.findMatches())), 1)

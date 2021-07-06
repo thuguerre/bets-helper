@@ -11,10 +11,8 @@ from typing import List
 from pymongo import MongoClient
 
 # Local imports
-currentdir = os.path.dirname(os.path.realpath(__file__))
-parentdir = os.path.dirname(currentdir)
-sys.path.append(parentdir)
 from betsmodels import Match
+from betsmodels import Bookmaker
 
 
 class BetsMongoDB:
@@ -129,10 +127,10 @@ class BetsMongoDB:
     def findMatches(self):
         return self.__db.matches.find({})
 
-    def findMatch(self, date: str, bookmaker: str, bookmaker_home_team_id: int, bookmaker_visitor_team_id: int):
+    def findMatch(self, date: str, bookmaker: Bookmaker, bookmaker_home_team_id: int, bookmaker_visitor_team_id: int):
 
         query = {
-            "bookmaker": bookmaker,
+            "bookmaker": bookmaker.name,
             "match_date": {"$gt": date},
             "match_date": {"$lt": date + timedelta(days=1)},
             "bookmaker_home_team_id": bookmaker_home_team_id,

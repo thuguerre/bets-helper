@@ -10,7 +10,6 @@ import random
 
 # Local imports
 import localcontextloader
-from betsmodels import MatchResult
 from mongodb.GoogleDriveHelper import GoogleDriveHelper
 from mongodb.BetsMongoDB import BetsMongoDB
 from betsmodels import Match
@@ -29,7 +28,6 @@ class TestDumpDB(unittest.TestCase):
     def setUp(self):
 
         self.mongodb_name = os.environ["MONGODB_NAME"]
-        print(os.environ["MONGODB_NAME"])
 
         self.__prepare_backup_folder()
         self.__test_is_backup_folder_empty()
@@ -129,18 +127,6 @@ class TestDumpDB(unittest.TestCase):
 
     @pytest.mark.unittest
     def test_content_backup_file(self):
-        
-        # preparing random match result to insert in db, so in dump
-        match_result = MatchResult(
-            '1900-' + str(random.randint(0, 99)) + '-' + str(random.randint(0,99)),
-            'test_content_backup_file_sport' + str(random.randint(0,99)),
-            'test_content_backup_file_country' + str(random.randint(0,99)),
-            'test_content_backup_file_league' + str(random.randint(0,99)),
-            'test_content_backup_file_home_team' + str(random.randint(0,99)),
-            str(random.randint(0,99)),
-            'test_content_backup_file_visitor_team' + str(random.randint(0,99)),
-            str(random.randint(0,99))
-        )
 
         # preparing random match to insert in db, so in dump
         match = Match(

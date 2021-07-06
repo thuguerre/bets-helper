@@ -77,7 +77,7 @@ class WinamaxCrawler:
             match = PRELOADED_STATE["matches"][match_id]
             if match["sportId"] == WINAMAX_SPORT_ID_BASEBALL and match["categoryId"] == WINAMAX_SPORT_CATEGORY_ID_BASEBALL_JAPAN:
                 
-                retrieved_match = Match(datetime.now(), Sport.BASEBALL, Country.JAPAN, "Regular Season", datetime.fromtimestamp(match["matchStart"]), Bookmaker.WINAMAX, match["matchId"], match["competitor1Name"], match["competitor1Id"], match["competitor2Name"], match["competitor2Id"])
+                retrieved_match = Match(datetime.now(), Sport.BASEBALL, Country.JAPAN, "Regular Season", datetime.fromtimestamp(match["matchStart"]), Bookmaker.WINAMAX, match["matchId"], match["competitor1Name"], match["competitor1Id"], None, match["competitor2Name"], match["competitor2Id"], None)
                 
                 if match["status"] == 'PREMATCH':
                     oddStatus = OddStatus.PREMATCH

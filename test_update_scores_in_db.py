@@ -52,9 +52,7 @@ class TestUpdateScoresInDb(unittest.TestCase):
         self.assertEqual(len(list(self.__betsdb.findMatches())), 0)
 
         # first insertion in database
-        match_to_insert = Match(date, sport, country, league, date, bookmaker, match_id, home_team_name, home_team_id, visitor_team_name, visitor_team_id)
-        match_to_insert.home_team_score = home_score
-        match_to_insert.visitor_team_score = visitor_old_score
+        match_to_insert = Match(date, sport, country, league, date, bookmaker, match_id, home_team_name, home_team_id, home_score, visitor_team_name, visitor_team_id, visitor_old_score)
         self.__betsdb.insert_match_or_update_scores(match_to_insert)
 
         # verifying a new match has been inserted

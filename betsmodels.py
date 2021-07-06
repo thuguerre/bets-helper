@@ -98,7 +98,7 @@ class Match:
 
     odds: List[Odd] = []
 
-    def __init__(self, timestamp: datetime, sport: Sport, country: Country, league: str, match_date: datetime, bookmaker: Bookmaker, bookmaker_match_id: str, bookmaker_home_team_name: str, bookmaker_home_team_id: str, bookmaker_visitor_team_name: str, bookmaker_visitor_team_id: str):
+    def __init__(self, timestamp: datetime, sport: Sport, country: Country, league: str, match_date: datetime, bookmaker: Bookmaker, bookmaker_match_id: str, bookmaker_home_team_name: str, bookmaker_home_team_id: str, home_team_score: int, bookmaker_visitor_team_name: str, bookmaker_visitor_team_id: str, visitor_team_score: int):
         self.timestamp = timestamp
         self.sport = sport.name
         self.country = country.name
@@ -110,8 +110,8 @@ class Match:
         self.bookmaker_home_team_id = bookmaker_home_team_id
         self.bookmaker_visitor_team_name = bookmaker_visitor_team_name
         self.bookmaker_visitor_team_id = bookmaker_visitor_team_id
-        self.home_team_score = None
-        self.visitor_team_score = None
+        self.home_team_score = home_team_score
+        self.visitor_team_score = visitor_team_score
         self.odds = []
 
     def toJSON(self) -> dict:
@@ -248,8 +248,20 @@ class MatchResult:
         mBookmaker_visitor_team_name: str = converter.get_winamax_name(self.visitor_team)
         mBookmaker_visitor_team_id: str = converter.get_winamax_id(self.visitor_team)
         
-        match = Match(mTimestamp, mSport, mCountry, mLeague, mMatch_date, mBookmaker, mBookmaker_match_id, mBookmaker_home_team_name, mBookmaker_home_team_id, mBookmaker_visitor_team_name, mBookmaker_visitor_team_id)
-        match.home_team_score = self.home_score
-        match.visitor_team_score = self.visitor_score
+        match = Match(
+            mTimestamp,
+            mSport,
+            mCountry,
+            mLeague,
+            mMatch_date,
+            mBookmaker,
+            mBookmaker_match_id,
+            mBookmaker_home_team_name,
+            mBookmaker_home_team_id,
+            self.home_score,
+            mBookmaker_visitor_team_name,
+            mBookmaker_visitor_team_id,
+            self.visitor_score
+        )
 
         return match

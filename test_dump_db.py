@@ -139,8 +139,10 @@ class TestDumpDB(unittest.TestCase):
             str(random.randint(0,99)),
             'test_content_backup_file_home_team' + str(random.randint(0,99)),
             str(random.randint(0,99)),
+            None,
             'test_content_backup_file_visitor_team' + str(random.randint(0,99)),
-            str(random.randint(0,99))
+            str(random.randint(0,99)),
+            None
         )
 
         mongodb = BetsMongoDB()

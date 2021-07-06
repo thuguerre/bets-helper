@@ -6,12 +6,16 @@ import requests
 import ssl
 import re
 from urllib3 import poolmanager
+from datetime import datetime
 
 # Local imports
 currentdir = os.path.dirname(os.path.realpath(__file__))
 parentdir = os.path.dirname(currentdir)
 sys.path.append(parentdir)
-from betsmodels import MatchResult
+from betsmodels import Match
+from betsmodels import BaseballJapanConverter
+from betsmodels import Sport
+from betsmodels import Country
 
 
 URL_Farm_Leagues = "https://npb.jp/bis/eng/<YEAR>/calendar/index_farm_<MONTH>.html"
@@ -79,14 +83,20 @@ class NPBCrawler:
                 add_match = False
 
             if add_match:
-                match_result_to_add = MatchResult(
-                    match_day[0:4] + "-" + match_day[4:6] + "-" + match_day[6:9],
-                    "baseball",
-                    "japan",
+                converter = BaseballJapanConverter()
+                match_result_to_add = Match(
+                    datetime.strptime(match_day, "%Y%m%d"),
+                    Sport.BASEBALL,
+                    Country.JAPAN,
                     league_to_get,
-                    match_result.split()[0],
+                    datetime.strptime(match_day, "%Y%m%d"),
+                    None,
+                    "-1",
+                    converter.get_winamax_name(match_result.split()[0]),
+                    converter.get_winamax_id(match_result.split()[0]),
                     match_result.split()[1],
-                    match_result.split()[4],
+                    converter.get_winamax_name(match_result.split()[4]),
+                    converter.get_winamax_id(match_result.split()[4]),
                     match_result.split()[3]
                 )
                 logging.info(match_result_to_add.toJSON())

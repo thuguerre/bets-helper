@@ -104,7 +104,7 @@ class Match:
         self.country = country.name
         self.league = league
         self.match_date = match_date
-        self.bookmaker = bookmaker.name
+        self.bookmaker = bookmaker.name if bookmaker != None else None
         self.bookmaker_match_id = bookmaker_match_id
         self.bookmaker_home_team_name = bookmaker_home_team_name
         self.bookmaker_home_team_id = bookmaker_home_team_id

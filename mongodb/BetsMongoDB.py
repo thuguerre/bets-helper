@@ -92,15 +92,30 @@ class BetsMongoDB:
 
     def dump_database(self, backup_folder_name: str = ""):
 
-        # using the mongodump command to backup THE contextualized database only
+        if not backup_folder_name.endswith("/"):
+            backup_folder_name = backup_folder_name + "/"
+
+        # use the mongodump command to backup THE contextualized database only
         os.system(f"mongodump --uri mongodb+srv://{self.mongodb_user}:{self.mongodb_pwd}@cluster0.gu9bi.mongodb.net/{self.mongodb_name} -o {backup_folder_name}")
 
-        files = []
+        tmp_filenames = []
 
-        files.append(f"{self.mongodb_name}/matches.bson")
-        files.append(f"{self.mongodb_name}/matches.metadata.json")
+        tmp_filenames.append("matches.bson")
+        tmp_filenames.append("matches.metadata.json")
 
-        return files
+        backup_timestamp = datetime.now().strftime("%Y%m%d%H%M")
+
+        # move all files to backup folder root
+        new_filenames = []
+        for tmp_filename in tmp_filenames:
+            new_filename = f"{self.mongodb_name}#{backup_timestamp}#{tmp_filename}"
+            os.rename(f"{backup_folder_name}{self.mongodb_name}/{tmp_filename}", f"{backup_folder_name}/{new_filename}")
+            new_filenames.append(new_filename)
+
+        # delete the db folder
+        os.rmdir(f"{backup_folder_name}bets_test_db/")
+
+        return new_filenames
 
     def dropCollection(self, collection: str):
         self.__db[collection].drop()

@@ -4,8 +4,8 @@ import logging
 
 # Local imports
 import localcontextloader
-from BetsMongoDB import BetsMongoDB
-from GoogleDriveHelper import GoogleDriveHelper
+from mongodb.BetsMongoDB import BetsMongoDB
+from mongodb.GoogleDriveHelper import GoogleDriveHelper
 
 
 #
@@ -24,11 +24,12 @@ def printDocumentation():
 #
 if __name__ == '__main__':
 
-    logging.getLogger().setLevel(logging.WARN)
+    logging.getLogger().setLevel(logging.DEBUG)
 
     list_files = False
     delete_all_files = False
     delete_test_files = False
+    folder_name = ""
 
     # loading script arguments
     for args in sys.argv:
@@ -42,6 +43,9 @@ if __name__ == '__main__':
         elif args == "action:delete_test_files":
             delete_test_files = True
 
+        elif args.startswith("folder:"):
+            folder_name = args.split(":")[1]
+
         elif args == '-h' or args == "-help" or args == "--h" or args == "--help":
             printDocumentation()
             sys.exit()
@@ -49,7 +53,7 @@ if __name__ == '__main__':
     drive = GoogleDriveHelper()
 
     if list_files:
-        drive.list_files()
+        drive.list_files("", folder_name)
         print("----")
 
     if delete_all_files:

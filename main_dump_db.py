@@ -2,6 +2,7 @@
 import os
 import sys
 import logging
+from datetime import date
 
 # Local imports
 import localcontextloader
@@ -9,7 +10,7 @@ from mongodb.BetsMongoDB import BetsMongoDB
 from mongodb.GoogleDriveHelper import GoogleDriveHelper
 
 
-BACKUP_FOLDER_NAME = "./backup/"
+BACKUP_FOLDER_NAME = "./backup-" + date.today().strftime("%Y-%m-%d") + "/"
 
 #
 # Documentation Printing Method
@@ -34,6 +35,7 @@ if __name__ == '__main__':
     upload_to_gdrive = True
     delete_local_files = False
     delete_remote_files = False
+    mongodb_name = os.environ["MONGODB_NAME"]
 
     # loading script arguments
     for args in sys.argv:
@@ -57,19 +59,26 @@ if __name__ == '__main__':
     # dumping MongoDB to files
     logging.info("dumping mongodb...")
     mongodb = BetsMongoDB()
-    files = mongodb.dumpDB(BACKUP_FOLDER_NAME)
+    files = mongodb.dump_database(BACKUP_FOLDER_NAME)
     logging.info("dumped.")
 
     # uploading dumped files to Google Drive
     if upload_to_gdrive:
+
         drive = GoogleDriveHelper()
 
-        drive.upload_files(files, BACKUP_FOLDER_NAME)
+        # creating the folder what will receive the files
+        gdrive_backup_folder_name = mongodb_name + "-backup-" + date.today().strftime("%Y-%m-%d")
+        gdrive_folder_id = drive.create_folder(gdrive_backup_folder_name)
+
+        drive.upload_files(files, BACKUP_FOLDER_NAME, gdrive_folder_id)
         logging.info("files uploaded to GDrive")
     
     # deleting files if asked
     if delete_local_files:
         for delete_file in files:
-            os.remove(BACKUP_FOLDER_NAME + delete_file)
+            os.remove(delete_file)
+
+        os.rmdir(BACKUP_FOLDER_NAME + os.environ["MONGODB_NAME"])
 
         logging.info("files deleted")

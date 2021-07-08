@@ -1,6 +1,7 @@
 # Standard Library imports
 import os
 import typing
+import logging
 from pathlib import Path
 
 # Third-party imports
@@ -35,10 +36,14 @@ class GoogleDriveHelper:
         gauth.credentials = ServiceAccountCredentials.from_json_keyfile_dict(credentials, scope)
         self.drive = GoogleDrive(gauth)
 
-    def upload_files(self, files: typing.List[str], backup_folder_name: str = ""):
+    def upload_files(self, files: typing.List[str], backup_folder_name: str = "", gdrive_folder_id: str = ""):
 
         for upload_file in files:
-            gfile = self.drive.CreateFile({'title': upload_file})
+            gfile = self.drive.CreateFile(
+                {
+                    'title': upload_file,
+                    'parents': gdrive_folder_id
+                })
             gfile.SetContentFile(backup_folder_name + upload_file)
             gfile.Upload()
 
@@ -72,10 +77,22 @@ class GoogleDriveHelper:
     def delete_all_files(self):
         self.delete_files("")
 
-    def list_files(self, prefix: str = "") -> typing.List[str]:
+    def list_files(self, prefix: str = "", folder_name: str = "") -> typing.List[str]:
+
+        folder_id = 'root'
+
+        if folder_name != "":
+            file_list = self.drive.ListFile({'q': "'root' in parents and trashed=false"}).GetList()
+            for file in file_list:
+                if file['title'] == folder_name:                    
+                    folder_id = file['id']
+                    logging.debug(f"folder '{folder_name}' found under id:'{folder_id}'")
+                    break
 
         return_file_list = []
-        file_list = self.drive.ListFile({'q': "'root' in parents and trashed=false"}).GetList()
+
+        file_list = self.drive.ListFile({'q': f"'{folder_id}' in parents and trashed=false"}).GetList()
+
         for drive_file in file_list:
             if drive_file['title'].startswith(prefix):
                 print(drive_file['title'])
@@ -92,3 +109,8 @@ class GoogleDriveHelper:
                 count = count + 1
 
         return count
+
+    def create_folder(self, folder_name: str) -> str:
+        folder = self.drive.CreateFile({'title' : folder_name, 'mimeType' : 'application/vnd.google-apps.folder'})
+        folder.Upload()
+        return folder.get('id')

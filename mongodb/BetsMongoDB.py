@@ -20,11 +20,11 @@ class BetsMongoDB:
     __db = None
 
     def __init__(self):
-        mongodb_user = os.environ['MONGODB_USER']
-        mongodb_pwd = os.environ['MONGODB_PWD']
-        mongodb_name = os.environ['MONGODB_NAME']
+        self.mongodb_user = os.environ['MONGODB_USER']
+        self.mongodb_pwd = os.environ['MONGODB_PWD']
+        self.mongodb_name = os.environ['MONGODB_NAME']
 
-        client = MongoClient(f"mongodb+srv://{mongodb_user}:{mongodb_pwd}@cluster0.gu9bi.mongodb.net/{mongodb_name}?retryWrites=true&w=majority")
+        client = MongoClient(f"mongodb+srv://{self.mongodb_user}:{self.mongodb_pwd}@cluster0.gu9bi.mongodb.net/{self.mongodb_name}?retryWrites=true&w=majority")
         self.__db = client.get_default_database()
 
     def insertMatchOrAppendOdds(self, match: Match):
@@ -90,36 +90,17 @@ class BetsMongoDB:
         else:
             raise Exception
 
-    def dumpDB(self, backup_folder_name: str = ""):
+    def dump_database(self, backup_folder_name: str = ""):
+
+        # using the mongodump command to backup THE contextualized database only
+        os.system(f"mongodump --uri mongodb+srv://{self.mongodb_user}:{self.mongodb_pwd}@cluster0.gu9bi.mongodb.net/{self.mongodb_name} -o {backup_folder_name}")
+
         files = []
-        files.append(self.__dumpCollection(self.__db.matches, backup_folder_name))
+
+        files.append(f"{self.mongodb_name}/matches.bson")
+        files.append(f"{self.mongodb_name}/matches.metadata.json")
+
         return files
-
-    def __dumpCollection(self, collection, backup_folder_name: str = "") -> str:
-
-        if not(backup_folder_name == ""):
-            # creating BACKUP folder if it does not exists
-            Path(backup_folder_name).mkdir(exist_ok=True)
-
-        logging.debug("dumping collection '" + collection.full_name + "'")
-        dump_filename = self.__define_dump_filename(collection)
-
-        cursor = collection.find({})
-        with open(backup_folder_name + dump_filename, 'w') as file:
-            file.write('[')
-            for document in cursor:
-                file.write(dumps(document))
-                file.write(',\n')
-            file.write(']')
-
-        return dump_filename
-
-    def __define_dump_filename(self, collection) -> str:
-
-        now = datetime.now()
-        suffix = now.strftime("%Y%m%d%H%M%S")
-
-        return collection.full_name + '.' + suffix + '.json'
 
     def dropCollection(self, collection: str):
         self.__db[collection].drop()

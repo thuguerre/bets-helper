@@ -50,6 +50,9 @@ jobs:
         python -m pip install --upgrade pip
         if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
 
+    - name: Install Mongo Tools
+      run: sudo apt-get install -y mongo-tools
+
     - name: Lint with flake8
       run: |
         # stop the build if there are Python syntax errors or undefined names

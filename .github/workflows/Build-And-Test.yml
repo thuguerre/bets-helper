@@ -52,8 +52,7 @@ jobs:
 
     - name: Install Mongo Tools
       run: |
-        sudo dpkg -P bsondump
-        sudo apt-get install -y mongo-tools
+        sudo apt-get install -f -y mongo-tools
 
     - name: Lint with flake8
       run: |

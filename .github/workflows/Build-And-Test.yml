@@ -51,7 +51,9 @@ jobs:
         if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
 
     - name: Install Mongo Tools
-      run: sudo apt-get install -y mongo-tools
+      run: |
+        sudo dpkg -P bsondump
+        sudo apt-get install -y mongo-tools
 
     - name: Lint with flake8
       run: |

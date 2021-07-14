@@ -52,8 +52,7 @@ jobs:
 
     - name: Install Mongo Tools
       run: |
-        brew tap
-        brew update --preinstall
+        brew tap mongodb/brew
         brew install mongodb-community
 
     - name: Lint with flake8

@@ -53,7 +53,9 @@ if __name__ == '__main__':
     drive = GoogleDriveHelper()
 
     if list_files:
-        drive.list_files("", folder_name)
+        files = drive.list_files()
+        for file in files:
+            print(file)
         print("----")
 
     if delete_all_files:

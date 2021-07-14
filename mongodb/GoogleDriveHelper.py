@@ -51,7 +51,7 @@ class GoogleDriveHelper:
         if not(backup_folder_name == ""):
             # creating BACKUP folder if it does not exists
             Path(backup_folder_name).mkdir(exist_ok=True)
-
+            
         downloaded_files = []
 
         file_list = self.drive.ListFile({'q': "'root' in parents and trashed=false"}).GetList()
@@ -84,7 +84,32 @@ class GoogleDriveHelper:
 
         for drive_file in file_list:
             if drive_file['title'].startswith(prefix):
-                print(drive_file['title'])
                 return_file_list.append(drive_file['title'])
 
         return return_file_list
+
+    def get_backuped_dbs(self) -> typing.List[str]:
+
+        available_files = self.list_files()
+        return_db_list = []
+
+        for available_file in available_files:
+            if "#" in available_file:
+                db_name = available_file.split("#")[0]
+                if db_name not in return_db_list:
+                    return_db_list.append(db_name)
+
+        return return_db_list
+
+    def get_backups_timestamps(self, db_name: str = "") -> typing.List[str]:
+
+        available_files = self.list_files()
+        return_timestamp_list = []
+
+        for available_file in available_files:
+            if "#" in available_file:
+                timestamp = available_file.split("#")[1]
+                if timestamp not in return_timestamp_list:
+                    return_timestamp_list.append(timestamp)
+
+        return return_timestamp_list

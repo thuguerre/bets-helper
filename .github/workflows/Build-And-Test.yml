@@ -52,6 +52,7 @@ jobs:
 
     - name: Install Mongo Tools
       run: |
+        brew tap
         brew update --preinstall
         brew install mongodb-community
 

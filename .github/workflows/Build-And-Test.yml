@@ -52,7 +52,7 @@ jobs:
 
     - name: Install Mongo Tools
       run: |
-        sudo apt-get install -f -y mongo-tools
+        brew install mongodb-community
 
     - name: Lint with flake8
       run: |

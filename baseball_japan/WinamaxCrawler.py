@@ -90,15 +90,20 @@ class WinamaxCrawler:
                         raise ParseException
 
                     try:
-                        mainBet = PRELOADED_STATE["bets"][str(match["mainBetId"])]
 
-                        odd1 = Odd(datetime.now(), oddStatus, OddType.RESULT, match["competitor1Id"], PRELOADED_STATE["odds"][str(mainBet["outcomes"][0])])
-                        odd2 = Odd(datetime.now(), oddStatus, OddType.RESULT, match["competitor2Id"], PRELOADED_STATE["odds"][str(mainBet["outcomes"][1])])
-                        
-                        retrieved_match.odds.append(odd1)
-                        retrieved_match.odds.append(odd2)
+                        # at the end of live matches, main bet is not proposed anymore
+                        # testing if we are proposed a main bet to prevent KeyError
+                        if match["mainBetId"] != "None":
 
-                        retrieved_matches.append(retrieved_match)
+                            mainBet = PRELOADED_STATE["bets"][str(match["mainBetId"])]
+
+                            odd1 = Odd(datetime.now(), oddStatus, OddType.RESULT, match["competitor1Id"], PRELOADED_STATE["odds"][str(mainBet["outcomes"][0])])
+                            odd2 = Odd(datetime.now(), oddStatus, OddType.RESULT, match["competitor2Id"], PRELOADED_STATE["odds"][str(mainBet["outcomes"][1])])
+                            
+                            retrieved_match.odds.append(odd1)
+                            retrieved_match.odds.append(odd2)
+
+                            retrieved_matches.append(retrieved_match)
 
                     except KeyError as ke:
                         logging.error("OS error: {0}".format(ke))

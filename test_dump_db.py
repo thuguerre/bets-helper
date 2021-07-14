@@ -25,12 +25,12 @@ class TestDumpDB(unittest.TestCase):
         self.backup_folder_name = main_dump_db.BACKUP_FOLDER_NAME
 
         self.prepare_backup_folder()
-        self.test_root_backup_folder_is_empty()
+        self.assert_root_backup_folder_is_empty()
 
         self.drive = GoogleDriveHelper()
 
         self.prepare_drive_folder()
-        self.test_gdrive_folder_is_empty()
+        self.assert_gdrive_folder_is_empty()
 
     def tearDown(self):
         self.prepare_backup_folder() # deleting files
@@ -39,10 +39,10 @@ class TestDumpDB(unittest.TestCase):
     def get_db_backup_folder_path(self):
         return f"{self.backup_folder_name}{self.mongodb_name}/"
 
-    def test_root_backup_folder_is_empty(self):
+    def assert_root_backup_folder_is_empty(self):
         self.assertTrue(os.listdir(self.backup_folder_name) == [])
     
-    def test_gdrive_folder_is_empty(self):
+    def assert_gdrive_folder_is_empty(self):
         self.assertEqual(len(self.drive.list_files(self.mongodb_name)), 0)
     
     def prepare_backup_folder(self):
@@ -82,7 +82,7 @@ class TestDumpDB(unittest.TestCase):
     def get_collection_bson_dump_path(self, collection_name: str):
         return self.backup_folder_name + self.get_collection_bson_dump_filename(collection_name)
 
-    def test_all_backup_files_are_in_local_folder(self):
+    def assert_all_backup_files_are_in_local_folder(self):
         
         # verify DB backup folder exists
         self.assertTrue(os.path.isdir(self.backup_folder_name))
@@ -91,7 +91,7 @@ class TestDumpDB(unittest.TestCase):
         self.assertEqual(len(glob.glob(self.get_collection_metadata_dump_path('matches'))), 1)
         self.assertEqual(len(glob.glob(self.get_collection_bson_dump_path('matches'))), 1)
 
-    def test_all_backup_files_are_in_gdrive_folder(self):
+    def assert_all_backup_files_are_in_gdrive_folderer(self):
 
         # get all files from gdrive, with mongodb name prefix
         gdrive_files = self.drive.list_files(self.mongodb_name)
@@ -113,10 +113,10 @@ class TestDumpDB(unittest.TestCase):
         self.assertTrue(matches_json_found)
         self.assertTrue(matches_bson_found)
 
-    def test_db_backup_folder_does_not_exist(self):
+    def assert_db_backup_folder_does_not_exist_exist(self):
         self.assertFalse(os.path.exists(self.backup_folder_name + self.mongodb_name))
 
-    def test_root_backup_folder_does_not_exist(self):
+    def assert_root_backup_folder_does_not_exist(self):
         self.assertFalse(os.path.exists(self.backup_folder_name))
 
     @pytest.mark.unittest
@@ -124,33 +124,33 @@ class TestDumpDB(unittest.TestCase):
         
         os.system("python3 ./main_dump_db.py upload_to_gdrive:no delete_local_files:no")
 
-        self.test_db_backup_folder_does_not_exist()
-        self.test_all_backup_files_are_in_local_folder()
-        self.test_gdrive_folder_is_empty()
+        self.assert_db_backup_folder_does_not_exist_exist()
+        self.assert_all_backup_files_are_in_local_folder()
+        self.assert_gdrive_folder_is_empty()
 
     @pytest.mark.unittest
     def test_backup_files_are_generated_and_locally_deleted(self):
         
         os.system("python3 ./main_dump_db.py upload_to_gdrive:no delete_local_files:yes")
 
-        self.test_db_backup_folder_does_not_exist()
-        self.test_root_backup_folder_does_not_exist()
-        self.test_gdrive_folder_is_empty()
+        self.assert_db_backup_folder_does_not_existot_exist()
+        self.assert_root_backup_folder_does_not_exist()
+        self.assert_gdrive_folder_is_empty()
  
     @pytest.mark.unittest
     def test_backup_file_is_uploaded(self):
         
         os.system("python3 ./main_dump_db.py upload_to_gdrive:yes delete_local_files:no")
 
-        self.test_db_backup_folder_does_not_exist()
-        self.test_all_backup_files_are_in_local_folder()
-        self.test_all_backup_files_are_in_gdrive_folder()
+        self.assert_db_backup_folder_does_not_existot_exist()
+        self.assert_all_backup_files_are_in_local_folder()
+        self.assert_all_backup_files_are_in_gdrive_folderfolder()
 
     @pytest.mark.unittest
     def test_backup_files_are_uploaded_and_locally_deleted(self):
         
         os.system("python3 ./main_dump_db.py upload_to_gdrive:yes delete_local_files:yes")
 
-        self.test_db_backup_folder_does_not_exist()
-        self.test_root_backup_folder_does_not_exist()
-        self.test_all_backup_files_are_in_gdrive_folder()
+        self.assert_db_backup_folder_does_not_existes_not_exist()
+        self.assert_root_backup_folder_does_not_exist()
+        self.assert_all_backup_files_are_in_gdrive_folderfolder()

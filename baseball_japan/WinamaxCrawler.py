@@ -73,28 +73,40 @@ class WinamaxCrawler:
 
         retrieved_matches = []
 
-        for match_id in PRELOADED_STATE["matches"]:
-            match = PRELOADED_STATE["matches"][match_id]
-            if match["sportId"] == WINAMAX_SPORT_ID_BASEBALL and match["categoryId"] == WINAMAX_SPORT_CATEGORY_ID_BASEBALL_JAPAN:
-                
-                retrieved_match = Match(datetime.now(), Sport.BASEBALL, Country.JAPAN, "Regular Season", datetime.fromtimestamp(match["matchStart"]), Bookmaker.WINAMAX, match["matchId"], match["competitor1Name"], match["competitor1Id"], match["competitor2Name"], match["competitor2Id"])
-                
-                if match["status"] == 'PREMATCH':
-                    oddStatus = OddStatus.PREMATCH
-                elif match["status"] == 'LIVE':
-                    oddStatus = OddStatus.LIVE
-                else:
-                    logging.fatal("Unknown match status: " + match["status"])
-                    raise ParseException
+        if "matches" in PRELOADED_STATE:
 
-                mainBet = PRELOADED_STATE["bets"][str(match["mainBetId"])]
+            for match_id in PRELOADED_STATE["matches"]:
+                match = PRELOADED_STATE["matches"][match_id]
+                if match["sportId"] == WINAMAX_SPORT_ID_BASEBALL and match["categoryId"] == WINAMAX_SPORT_CATEGORY_ID_BASEBALL_JAPAN:
+                    
+                    retrieved_match = Match(datetime.now(), Sport.BASEBALL, Country.JAPAN, "Regular Season", datetime.fromtimestamp(match["matchStart"]), Bookmaker.WINAMAX, match["matchId"], match["competitor1Name"], match["competitor1Id"], match["competitor2Name"], match["competitor2Id"])
+                    
+                    if match["status"] == 'PREMATCH':
+                        oddStatus = OddStatus.PREMATCH
+                    elif match["status"] == 'LIVE':
+                        oddStatus = OddStatus.LIVE
+                    else:
+                        logging.fatal("Unknown match status: " + match["status"])
+                        raise ParseException
 
-                odd1 = Odd(datetime.now(), oddStatus, OddType.RESULT, match["competitor1Id"], PRELOADED_STATE["odds"][str(mainBet["outcomes"][0])])
-                odd2 = Odd(datetime.now(), oddStatus, OddType.RESULT, match["competitor2Id"], PRELOADED_STATE["odds"][str(mainBet["outcomes"][1])])
-                
-                retrieved_match.odds.append(odd1)
-                retrieved_match.odds.append(odd2)
+                    try:
+                        mainBet = PRELOADED_STATE["bets"][str(match["mainBetId"])]
 
-                retrieved_matches.append(retrieved_match)
+                        odd1 = Odd(datetime.now(), oddStatus, OddType.RESULT, match["competitor1Id"], PRELOADED_STATE["odds"][str(mainBet["outcomes"][0])])
+                        odd2 = Odd(datetime.now(), oddStatus, OddType.RESULT, match["competitor2Id"], PRELOADED_STATE["odds"][str(mainBet["outcomes"][1])])
+                        
+                        retrieved_match.odds.append(odd1)
+                        retrieved_match.odds.append(odd2)
+
+                        retrieved_matches.append(retrieved_match)
+
+                    except KeyError as ke:
+                        logging.error("OS error: {0}".format(ke))
+                        logging.error(PRELOADED_STATE)
+                        raise
+
+        else:
+            logging.warn("no key 'matches' in PRELOADED_STATE.")
+            logging.warn(PRELOADED_STATE)
 
         return retrieved_matches
